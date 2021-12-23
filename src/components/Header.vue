@@ -29,9 +29,6 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                                <el-dropdown-item>项目仓库</el-dropdown-item>
-                            </a>
                             <el-dropdown-item command="user">个人中心</el-dropdown-item>
                             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
@@ -45,6 +42,8 @@
 import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import {ElMessage} from "element-plus";
+import axios from "axios";
 export default {
     setup() {
         const username = localStorage.getItem("ms_username");
@@ -63,11 +62,30 @@ export default {
             }
         });
 
+        const logout = (username) =>{
+            axios.post('http://localhost:8762/admin/base/logout',{
+            },{
+                headers: {
+                    authorization: localStorage.getItem("token")
+                }
+            }).then( res =>{
+                    if (res.data.code != 1000){
+                        ElMessage.error(res.data.message);
+                    }else {
+                        ElMessage.success("用户：" + username + " 退出")
+                    }
+                }
+            )
+        }
+
         // 用户名下拉菜单选择事件
         const router = useRouter();
         const handleCommand = (command) => {
             if (command == "loginout") {
+                logout(localStorage.getItem("ms_username"));
                 localStorage.removeItem("ms_username");
+                localStorage.removeItem("token");
+                sessionStorage.clear();
                 router.push("/login");
             } else if (command == "user") {
                 router.push("/user");

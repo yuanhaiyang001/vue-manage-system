@@ -12,11 +12,11 @@
                     </div>
                     <div class="user-info-list">
                         上次登录时间：
-                        <span>2019-11-01</span>
+                        <span>{{loginDate}}</span>
                     </div>
                     <div class="user-info-list">
                         上次登录地点：
-                        <span>东莞</span>
+                        <span>成都</span>
                     </div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
@@ -121,9 +121,9 @@ export default {
     name: "dashboard",
     components: { Schart },
     setup() {
-        const name = localStorage.getItem("ms_username");
-        const role = name === "admin" ? "超级管理员" : "普通用户";
-
+        const identityType = JSON.parse(sessionStorage.getItem("myInfo")).identityType;
+        const role = identityType === "0" ? "超级管理员" : identityType === "1" ? "宿舍管理员" : identityType === "2" ? "学生" : "其他";
+        const loginDate = JSON.parse(sessionStorage.getItem("myInfo")).loginDate;
         const data = reactive([
             {
                 name: "2018/09/04",
@@ -231,6 +231,7 @@ export default {
             options2,
             todoList,
             role,
+            loginDate,
         };
     },
 };
