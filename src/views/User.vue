@@ -110,7 +110,7 @@
                     console.log(res);
                     if (res.data.code != 1000){
                         if (res.data.code === 999){
-                            ElMessage.error("res.data.message");
+                            ElMessage.error(res.data.message);
                             router.push("/login");
                         }
                         ElMessage.error(res.data.message);

@@ -95,6 +95,7 @@ export default {
         const pageTotal = ref(0);
         // 获取表格数据
         const getData = () => {
+            console.log(tableData);
             fetchData(query).then((res) => {
                 tableData.value = res.list;
                 pageTotal.value = res.pageTotal || 50;

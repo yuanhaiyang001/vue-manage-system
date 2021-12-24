@@ -17,6 +17,14 @@ const routes = [
                     title: '系统首页'
                 },
                 component: () => import ( /* webpackChunkName: "dashboard" */ "../views/Dashboard.vue")
+            },
+            {
+                path: "/stuManage",
+                name: "stuManage",
+                meta: {
+                    title: '学生管理'
+                },
+                component: () => import("../views/stuManage.vue")
             }, {
                 path: "/table",
                 name: "basetable",
