@@ -118,7 +118,7 @@
                         let authorization = res.headers.authorization;
                         localStorage.setItem("token", authorization);
                         setTimeout(()=>{
-                            router.push("/");
+                            router.push("/dashboard");
                         }, 1000);
 
                     } else {
