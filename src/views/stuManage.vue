@@ -64,7 +64,6 @@
                                @current-change="handlePageChange"></el-pagination>
             </div>
         </div>
-
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" v-model="editVisible" width="25%">
             <el-form label-width="27%">
