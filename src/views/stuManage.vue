@@ -40,9 +40,7 @@
                         <el-tag :type="
                                 scope.row.onlineStatus === '1'
                                     ? 'success'
-                                    : scope.row.onlineStatus === '0'
-                                    ? 'info'
-                                    : ''
+                                    : 'info'
                             " style="margin-right: 15px">{{ scope.row.onlineStatus === '1' ? "在线" : "离线"}}
                         </el-tag>
                         <el-button type="text" style="color: red" @click="offline(scope.row.userNo)">{{ scope.row.onlineStatus === '1' ? "下线" : ""}}
@@ -52,7 +50,7 @@
 
                 <el-table-column label="操作" width="180" align="center">
                     <template #default="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row.userNo)">编辑
                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
                                    @click="deleteStu(scope.row.userNo)">删除
@@ -68,13 +66,13 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" v-model="editVisible" width="30%">
-            <el-form label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
+        <el-dialog title="编辑" v-model="editVisible" width="25%">
+            <el-form label-width="27%">
+                <el-form-item label="学院">
+                    <el-input v-model="editInfo.college" style="width: 70%"></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
+                <el-form-item label="专业">
+                    <el-input v-model="editInfo.discipline" style="width: 70%"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -95,73 +93,9 @@
 
     export default {
         name: "stuManage",
-        setup() {
-            const router = useRouter();
-            const query = reactive({
-                stuNo: "",
-                stuName: "",
-                college: "",
-                discipline: "",
-                pageNo: 1,
-                pageSize: 10,
-            });
-            let tableData = reactive([]);
-            const pageTotal = ref(0);
-            // 分页导航
-            const handlePageChange = (val) => {
-                query.pageIndex = val;
-                getData();
-            };
-
-            // 删除操作
-            const handleDelete = (index) => {
-                // 二次确认删除
-                ElMessageBox.confirm("确定要删除吗？", "提示", {
-                    type: "warning",
-                })
-                    .then(() => {
-                        ElMessage.success("删除成功");
-                        tableData.value.splice(index, 1);
-                    })
-                    .catch(() => {
-                    });
-            };
-
-            // 表格编辑时弹窗和保存
-            const editVisible = ref(false);
-            const form = reactive({
-                name: "",
-                address: "",
-            });
-            let idx = -1;
-            const handleEdit = (index, row) => {
-                idx = index;
-                Object.keys(form).forEach((item) => {
-                    form[item] = row[item];
-                });
-                editVisible.value = true;
-            };
-            const saveEdit = () => {
-                editVisible.value = false;
-                ElMessage.success(`修改第 ${idx + 1} 行成功`);
-                Object.keys(form).forEach((item) => {
-                    tableData.value[idx][item] = form[item];
-                });
-            };
-
-            return {
-                tableData,
-                pageTotal,
-                editVisible,
-                form,
-                handlePageChange,
-                handleDelete,
-                handleEdit,
-                saveEdit,
-            };
-        },
         data() {
           return {
+              //学生查询参数
               query: reactive({
                   onlineStatus: null,
                   stuNo: "",
@@ -173,7 +107,15 @@
                   pageSize: 10,
               }),
               isLoading: false,
+              //列表数据
               list: null,
+              editVisible: ref(false),
+              //编辑参数
+              editInfo: reactive({
+                  stuNo: "",
+                  college: "",
+                  discipline: "",
+              }),
           }
         },
         mounted() {
@@ -273,6 +215,43 @@
                         ElMessageBox.alert("删除失败"+error)
                     });
             },
+
+            //编辑信息
+            handleEdit(stuNo){
+                this.editInfo.stuNo = stuNo;
+                this.editVisible = true;
+            },
+
+            //保存编辑信息
+            saveEdit() {
+                console.log("编辑信息：");
+                axios.post('http://localhost:8762/admin/userManage/updateStuInfo', {
+                    userNo: this.editInfo.stuNo,
+                    college: this.editInfo.college,
+                    discipline: this.editInfo.discipline,
+                }, {
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if (res.data.code != 1000) {
+                        if (res.data.code === 999) {
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        this.query.isLoading = true;
+                        this.getTableData();
+                        ElMessage.success(res.data.message);
+                        setTimeout(()=>{
+                            this.query.isLoading = false;
+                        }, 0.5 * 1000);
+                    }
+                });
+                this.editVisible = false;
+            },
+
+
         },
     };
 
