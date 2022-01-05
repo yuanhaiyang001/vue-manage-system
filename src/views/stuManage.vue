@@ -45,7 +45,7 @@
                                     : ''
                             " style="margin-right: 15px">{{ scope.row.onlineStatus === '1' ? "在线" : "离线"}}
                         </el-tag>
-                        <el-button type="text" style="color: red">{{ scope.row.onlineStatus === '1' ? "下线" : ""}}
+                        <el-button type="text" style="color: red" @click="offline(scope.row.userNo)">{{ scope.row.onlineStatus === '1' ? "下线" : ""}}
                         </el-button>
                     </template>
                 </el-table-column>
@@ -55,7 +55,7 @@
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
-                                   @click="handleDelete(scope.$index, scope.row)">删除
+                                   @click="deleteStu(scope.row.userNo)">删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -203,13 +203,76 @@
                         return false;
                     } else {
                         this.list = res.data.data.list;
-                        console.log(this.list);
                         setTimeout(()=>{
                             this.query.isLoading = false;
                         }, 0.5 * 1000);
                     }
                 })
-            }
+            },
+
+            //学生下线
+            offline(stuNo) {
+                console.log("学生下线："+stuNo);
+                axios.post('http://localhost:8762/admin/userManage/updateStuInfo', {
+                    userNo: stuNo,
+                    onlineStatus: "0",
+                    loginFlag: "1",
+                }, {
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if (res.data.code != 1000) {
+                        if (res.data.code === 999) {
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        this.query.isLoading = true;
+                        this.getTableData();
+                        ElMessage.success(res.data.message);
+                        setTimeout(()=>{
+                            this.query.isLoading = false;
+                        }, 0.5 * 1000);
+                    }
+                })
+            },
+
+            //删除学生信息
+            deleteStu(stuNo) {
+                // 二次确认删除
+                ElMessageBox.confirm("确定要删除吗？", "提示", {
+                    type: "warning",
+                })
+                    .then(() => {
+                        console.log("删除学生"+stuNo);
+                        axios.post('http://localhost:8762/admin/userManage/delStuInfo', {
+                            stuNo: stuNo,
+                        }, {
+                            headers: {
+                                authorization: localStorage.getItem("token")
+                            }
+                        }).then(res => {
+                            if (res.data.code != 1000) {
+                                if (res.data.code === 999) {
+                                }
+                                ElMessage.error(res.data.message);
+                                return false;
+                            } else {
+                                this.query.isLoading = true;
+                                this.getTableData();
+                                setTimeout(()=>{
+                                    this.query.isLoading = false;
+                                }, 0.5 * 1000);
+                            }
+                        })
+                        ElMessage.success("删除成功");
+                        this.getTableData();
+                    })
+                    .catch((error) => {
+                        ElMessageBox.alert("删除失败"+error)
+                    });
+            },
         },
     };
 
@@ -240,6 +303,7 @@
 
     .mr10 {
         margin-right: 30px;
+        margin-bottom: 10px;
     }
 
     .table-td-thumb {
