@@ -39,8 +39,8 @@
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-user-solid grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
+                                    <div class="grid-num">{{topData.userCount}}</div>
+                                    <div>用户数量</div>
                                 </div>
                             </div>
                         </el-card>
@@ -48,10 +48,10 @@
                     <el-col :span="8">
                         <el-card shadow="hover" :body-style="{ padding: '0px' }">
                             <div class="grid-content grid-con-2">
-                                <i class="el-icon-message-solid grid-con-icon"></i>
+                                <i class="el-icon-s-order grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
-                                    <div>系统消息</div>
+                                    <div class="grid-num">{{topData.serviceCount}}</div>
+                                    <div>服务消息</div>
                                 </div>
                             </div>
                         </el-card>
@@ -59,10 +59,10 @@
                     <el-col :span="8">
                         <el-card shadow="hover" :body-style="{ padding: '0px' }">
                             <div class="grid-content grid-con-3">
-                                <i class="el-icon-s-goods grid-con-icon"></i>
+                                <i class="el-icon-tickets grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">5000</div>
-                                    <div>数量</div>
+                                    <div class="grid-num">{{topData.annCount}}</div>
+                                    <div>公告消息</div>
                                 </div>
                             </div>
                         </el-card>
@@ -117,9 +117,13 @@
 <script>
 import Schart from "vue-schart";
 import { reactive } from "vue";
+import {ElMessage, ElMessageBox} from "element-plus";
+import axios from "axios";
+
 export default {
     name: "dashboard",
     components: { Schart },
+
     setup() {
         const identityType = JSON.parse(sessionStorage.getItem("myInfo")).identityType;
         const role = identityType === "0" ? "超级管理员" : identityType === "1" ? "宿舍管理员" : identityType === "2" ? "学生" : "其他";
@@ -234,6 +238,82 @@ export default {
             loginDate,
         };
     },
+
+    data() {
+        return {
+            topData: reactive({
+                userCount: 0,
+                serviceCount: 0,
+                annCount: 0,
+            })
+        }
+    },
+
+    mounted() {
+        this.getTopData();
+    },
+
+    methods: {
+        //用户、服务消息、公告消息数量统计
+        getTopData(){
+            //用户数量
+            axios.post('http://localhost:8762/common/userCount', {
+            }, {
+                headers: {
+                    authorization: localStorage.getItem("token")
+                }
+            }).then(res => {
+                if (res.data.code != 1000) {
+                    if (res.data.code === 999) {
+                        ElMessage.error(res.data.message);
+                        router.push("/login");
+                    }
+                    ElMessage.error(res.data.message);
+                    return false;
+                } else {
+                    this.topData.userCount = res.data.data
+                }
+            });
+            //服务消息
+            axios.post('http://localhost:8762/common/serviceInfoCount', {
+            }, {
+                headers: {
+                    authorization: localStorage.getItem("token")
+                }
+            }).then(res => {
+                if (res.data.code != 1000) {
+                    if (res.data.code === 999) {
+                        ElMessage.error(res.data.message);
+                        router.push("/login");
+                    }
+                    ElMessage.error(res.data.message);
+                    return false;
+                } else {
+                    this.topData.serviceCount = res.data.data
+                }
+            });
+            //公告消息
+            axios.post('http://localhost:8762/common/annCount', {
+            }, {
+                headers: {
+                    authorization: localStorage.getItem("token")
+                }
+            }).then(res => {
+                if (res.data.code != 1000) {
+                    if (res.data.code === 999) {
+                        ElMessage.error(res.data.message);
+                        router.push("/login");
+                    }
+                    ElMessage.error(res.data.message);
+                    return false;
+                } else {
+                    this.topData.annCount = res.data.data
+                }
+            });
+        },
+
+
+    },
 };
 </script>
 
@@ -282,7 +362,7 @@ export default {
 }
 
 .grid-con-2 .grid-num {
-    color: rgb(45, 140, 240);
+    color: rgb(100, 213, 114);
 }
 
 .grid-con-3 .grid-con-icon {

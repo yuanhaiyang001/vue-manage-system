@@ -19,14 +19,15 @@
                 姓名：
                 <el-input v-model="query.stuName" placeholder="姓名" class="handle-input mr10"></el-input>
                 电话：
-                <el-input v-model="query.phone" placeholder="电话" class="handle-input mr10"></el-input>
+                <el-input v-model="query.phone" placeholder="电话" class="handle-input mr10"></el-input><br>
+                <el-button type="text" icon="el-icon-printer" class="handle-select mr10">导出</el-button>
                 学院：
                 <el-input v-model="query.college" placeholder="学院" class="handle-input mr10"></el-input>
                 专业：
                 <el-input v-model="query.discipline" placeholder="专业" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="getTableData">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">重置</el-button>
             </div>
-
             <el-table :data="list" v-loading = "query.isLoading" height="600" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
@@ -121,6 +122,7 @@
             this.getTableData();
         },
         methods: {
+            //获取表格信息
             getTableData() {
                 this.query.isLoading = true;
                 axios.post('http://localhost:8762/admin/userManage/queryStuInfo', {
@@ -266,7 +268,7 @@
     }
 
     .handle-input {
-        width: 10%;
+        width: 15%;
         display: inline-block;
     }
 
@@ -280,8 +282,11 @@
     }
 
     .mr10 {
-        margin-right: 30px;
+        margin-right: 100px;
         margin-bottom: 10px;
+    }
+    .reset{
+        margin-left: 58px;
     }
 
     .table-td-thumb {

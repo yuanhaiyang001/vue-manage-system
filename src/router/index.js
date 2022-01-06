@@ -25,6 +25,13 @@ const routes = [
                     title: '学生管理'
                 },
                 component: () => import("../views/stuManage.vue")
+            },{
+                path: "/importStu",
+                name: "importStu",
+                meta: {
+                    title: '导入信息'
+                },
+                component: () => import("../views/importStu.vue")
             }, {
                 path: "/table",
                 name: "basetable",

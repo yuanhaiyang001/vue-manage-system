@@ -50,6 +50,12 @@ export default {
 
             },
             {
+                icon: "el-icon-upload",
+                index: "/importStu",
+                title: "导入信息",
+
+            },
+            {
                 icon: "el-icon-lx-cascades",
                 index: "/table",
                 title: "基础表格",
@@ -143,7 +149,7 @@ export default {
 .sidebar {
     display: block;
     position: absolute;
-    left: 0;
+    left: 0px;
     top: 70px;
     bottom: 0;
     overflow-y: scroll;
@@ -152,7 +158,7 @@ export default {
     width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 250px;
+    width: 200px;
 }
 .sidebar > ul {
     height: 100%;
