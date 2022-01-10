@@ -33,6 +33,13 @@ const routes = [
                 },
                 component: () => import("../views/importStu.vue")
             }, {
+                path: "/appeals",
+                name: "appeals",
+                meta: {
+                    title: '服务信息'
+                },
+                component: () => import("../views/Appeals.vue")
+            },{
                 path: "/table",
                 name: "basetable",
                 meta: {

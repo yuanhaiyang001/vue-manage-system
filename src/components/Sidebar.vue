@@ -56,6 +56,12 @@ export default {
 
             },
             {
+                icon: "el-icon-message",
+                index: "/appeals",
+                title: "服务消息",
+
+            },
+            {
                 icon: "el-icon-lx-cascades",
                 index: "/table",
                 title: "基础表格",
