@@ -20,15 +20,15 @@
                 <el-input v-model="query.stuName" placeholder="姓名" class="handle-input mr10"></el-input>
                 电话：
                 <el-input v-model="query.phone" placeholder="电话" class="handle-input mr10"></el-input><br>
-                <el-button type="text" icon="el-icon-printer" class="handle-select mr10">导出</el-button>
+                <el-button type="text" icon="el-icon-printer" class="handle-select mr10" @click="exportStuInfo">导出</el-button>
                 学院：
                 <el-input v-model="query.college" placeholder="学院" class="handle-input mr10"></el-input>
                 专业：
                 <el-input v-model="query.discipline" placeholder="专业" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
-                <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">重置</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
-            <el-table :data="list" v-loading = "query.isLoading" height="600" border class="table" ref="multipleTable"
+            <el-table :data="list" v-loading = "query.isLoading" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
                 <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
@@ -60,9 +60,14 @@
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination background layout="total, prev, pager, next" :current-page="query.pageIndex"
-                               :page-size="query.pageSize" :total="pageTotal"
-                               @current-change="handlePageChange"></el-pagination>
+                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="query.pageIndex"
+                               :page-size="query.pageSize"
+                               :total="query.total"
+                               :page-sizes="[10,20,30,50]"
+                               @prev-click="prePage"
+                               @next-click="nextPage"
+                               @size-change="sizeChange"
+                               @current-change="currentPage"></el-pagination>
             </div>
         </div>
         <!-- 编辑弹出框 -->
@@ -97,6 +102,7 @@
           return {
               //学生查询参数
               query: reactive({
+                  pageIndex: 1,
                   onlineStatus: null,
                   stuNo: "",
                   stuName: "",
@@ -105,6 +111,7 @@
                   discipline: "",
                   pageNo: 1,
                   pageSize: 10,
+                  total: 0,
               }),
               isLoading: false,
               //列表数据
@@ -132,6 +139,8 @@
                     phone: this.query.phone,
                     college: this.query.college,
                     discipline: this.query.discipline,
+                    pageNo: this.query.pageNo,
+                    pageSize: this.query.pageSize,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")
@@ -146,11 +155,53 @@
                         return false;
                     } else {
                         this.list = res.data.data.list;
+                        this.query.total = res.data.data.total;
                         setTimeout(()=>{
                             this.query.isLoading = false;
                         }, 0.5 * 1000);
                     }
                 })
+            },
+
+            //重置查询
+            resetTableData() {
+                this.query = reactive({
+                    pageIndex: 1,
+                    onlineStatus: null,
+                    stuNo: "",
+                    stuName: "",
+                    phone: "",
+                    college: "",
+                    discipline: "",
+                    pageNo: 1,
+                    pageSize: 10,
+                    total: 0,
+                });
+                this.getTableData();
+            },
+
+            //上一页
+            prePage(currentNo) {
+                this.query.pageNo = currentNo;
+                this.getTableData();
+            },
+
+            //下一页
+            nextPage(currentNo) {
+                this.query.pageNo = currentNo;
+                this.getTableData();
+            },
+
+            //pagesize改变
+            sizeChange(size) {
+                this.query.pageSize = size;
+                this.getTableData();
+            },
+
+            //当前页改变
+            currentPage(currentNo) {
+                this.query.pageNo = currentNo;
+                this.getTableData();
             },
 
             //学生下线
@@ -251,6 +302,35 @@
                 });
                 this.editVisible = false;
             },
+
+            //导出excel
+            exportStuInfo(){
+                axios.post('http://localhost:8762/admin/userManage/exportStuInfo',{
+                    onlineStatus: this.query.onlineStatus === '2' ? null : this.query.onlineStatus,
+                    stuName: this.query.stuName,
+                    stuNo: this.query.stuNo,
+                    phone: this.query.phone,
+                    college: this.query.college,
+                    discipline: this.query.discipline,
+                    pageNo: this.query.pageNo,
+                    pageSize: this.query.pageSize,
+                },{
+                    headers: {
+                        authorization: localStorage.getItem("token"),
+                    },
+                    responseType: 'arraybuffer'
+                }).then(res=>{
+                    // 利用a标签自定义下载文件名
+                    const link = document.createElement('a')
+                    // 创建Blob对象，设置文件类型
+                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+                    let objectUrl = URL.createObjectURL(blob) // 创建URL
+                    link.href = objectUrl
+                    link.download = '学生信息.xlsx' // 自定义文件名
+                    link.click() // 下载文件
+                    URL.revokeObjectURL(objectUrl); // 释放内存
+                })
+            }
 
 
         },

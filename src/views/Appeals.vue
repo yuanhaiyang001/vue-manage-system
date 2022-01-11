@@ -11,13 +11,13 @@
                     <el-table :data="unhandleList" :show-header="false" style="width: 100%">
                         <el-table-column :show-overflow-tooltip="true">
                             <template #default="scope">
-                                <span class="message-title">{{scope.row.title + scope.row.content}}</span>
+                                <span class="message-title">{{"【"+scope.row.appealTitle+"】" + scope.row.appealContent}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="date" width="180"></el-table-column>
                         <el-table-column width="120">
                             <template #default="scope">
-                                <el-button size="small" @click="handleRead(scope.row.appealNo)">查看详情</el-button>
+                                <el-button size="small" @click="handleRead(scope.$index)">查看详情</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -27,16 +27,19 @@
                 </el-tab-pane>
                 <el-tab-pane :label="`${appealStatusCount[1].label}(${appealStatusCount[1].total})`" name="second">
                     <template v-if="message === 'second'">
-                        <el-table :data="state.read" :show-header="false" style="width: 100%">
+                        <el-table :data="handledList" :show-header="false" style="width: 100%">
                             <el-table-column>
                                 <template #default="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
+                                    <span class="message-title">{{"【"+scope.row.appealTitle+"】" + scope.row.appealContent}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="date" width="150"></el-table-column>
+                            <el-table-column prop="createTime" width="150"></el-table-column>
                             <el-table-column width="120">
                                 <template #default="scope">
-                                    <el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
+                                    <el-button :type="scope.row.auditStatus === '1'?
+                                                   'success' : 'info'" @click="handleDel(scope.$index)" disabled="false">
+                                        {{scope.row.auditStatus === '1' ? "通过" : "驳回"}}
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -67,25 +70,30 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog title="审核" v-model="appealDetails" width="25%">
+        <el-dialog title="审核" v-model="detailVisible" width="25%">
             <el-form label-width="27%">
                 <el-form-item label="时间">
-                    <el-input v-model="appealDetails.date" type="text" style="width: 70%"></el-input>
+                    <el-input v-model="appealDetails.createTime" type="text" style="width: 70%"
+                              readonly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="发起人">
-                    <el-input v-model="appealDetails.userName" type="text" style="width: 70%"></el-input>
+                    <el-input v-model="appealDetails.createUser" type="text" style="width: 70%"
+                              readonly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="标题">
-                    <el-input v-model="appealDetails.title" type="textarea" style="width: 70%"></el-input>
+                    <el-input v-model="appealDetails.appealTitle" type="textarea" style="width: 70%"
+                              readonly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="内容">
-                    <el-input v-model="appealDetails.content" type="textarea" style="width: 70%"></el-input>
+                    <el-input v-model="appealDetails.appealContent" type="textarea" rows="4" style="width: 70%;"
+                              readonly="true"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="editVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveEdit">确 定</el-button>
+                    <el-button type="success" @click="">通 过</el-button>
+                    <el-button type="danger" @click="">驳 回</el-button>
+                    <el-button @click="detailVisible = false">取 消</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -93,9 +101,10 @@
 </template>
 
 <script>
-    import { ref, reactive } from "vue";
+    import {ref, reactive} from "vue";
     import {ElMessage, ElMessageBox} from "element-plus";
     import axios from "axios";
+
     export default {
         name: "tabs",
         setup() {
@@ -153,47 +162,42 @@
                     label: "待处理",
                     handelStatus: "0",
                     total: 0
-                },{
+                }, {
                     label: "已处理",
                     handelStatus: "1",
                     total: 0
-                },{
+                }, {
                     label: "已撤销",
                     handelStatus: "2",
                     total: 0
                 }],
 
+                detailVisible: ref(false),
                 appealDetails: {
-                    date: "2018-04-19 20:00:00",
-                    userName: "超级管理员",
-                    title: "标题",
-                    content: "内容adada该系统将于今晚凌晨2点到5点进行升级维护",
+                    createTime: "2018-04-19 20:00:00",
+                    createUserNo: "201810414427",
+                    createUser: "超级管理员",
+                    appealTitle: "标题",
+                    appealContent: "内容adada该系统将于今晚凌晨2点到5点进行升级维护",
                 },
 
-                unhandleList: [
-                    {
-                        appealNo: "001",
-                        date: "2018-04-19 20:00:00",
-                        title: "【系统通知】",
-                        content: "该系统将于今晚凌晨2点到5点进行升级维护",
-                    },
-                ],
+                unhandleList: [],
                 handledList: [],
                 revokedList: [],
             }
         },
         mounted() {
             this.getAppealSum();
+            this.getListData();
         },
         methods: {
+            //获取各状态信息数量
             getAppealSum() {
-                axios.post('http://localhost:8762/admin/appealManage/sum', {
-
-                },{
+                axios.post('http://localhost:8762/admin/appealManage/sum', {}, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
-                }).then(res=>{
+                }).then(res => {
                     if (res.data.code != 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
@@ -201,17 +205,94 @@
                         }
                         ElMessage.error(res.data.message);
                         return false;
-                    }else {
-                        setTimeout(()=>{
+                    } else {
+                        setTimeout(() => {
                             this.appealStatusCount = res.data.data;
                         }, 0.5 * 1000);
                         console.log(this.appealStatusCount);
                     }
                 })
             },
-            handleRead(appealNo) {
-                console.log(appealNo);
+
+            //获取列表数据
+            getListData() {
+                axios.post('http://localhost:8762/admin/appealManage/list', {
+                    appealStatus: "0",
+                }, {
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if (res.data.code != 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            router.push("/login");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        console.log(res.data.data.list);
+                        setTimeout(() => {
+                            this.unhandleList = res.data.data.list;
+                        }, 0.5 * 1000);
+
+                    }
+                });
+
+                axios.post('http://localhost:8762/admin/appealManage/list', {
+                    appealStatus: "1",
+                }, {
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if (res.data.code != 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            router.push("/login");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        console.log(res.data.data.list);
+                        setTimeout(() => {
+                            this.handledList = res.data.data.list;
+                        }, 0.5 * 1000);
+
+                    }
+                });
+
+                axios.post('http://localhost:8762/admin/appealManage/list', {
+                    appealStatus: "2",
+                }, {
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if (res.data.code != 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            router.push("/login");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        console.log(res.data.data.list);
+                        setTimeout(() => {
+                            this.revokedList = res.data.data.list;
+                        }, 0.5 * 1000);
+
+                    }
+                })
             },
+
+            //获取详情
+            handleRead(index) {
+                console.log(index);
+                this.appealDetails = this.unhandleList[index];
+                this.detailVisible = true;
+            },
+
         }
     };
 </script>
@@ -220,6 +301,7 @@
     .message-title {
         cursor: pointer;
     }
+
     .handle-row {
         margin-top: 30px;
     }
