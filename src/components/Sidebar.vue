@@ -47,12 +47,28 @@ export default {
                 icon: "el-icon-lx-sort",
                 index: "/stuManage",
                 title: "学生管理",
+                subs: [
+                    {
+                        icon: "el-icon-upload",
+                        index: "/importStu",
+                        title: "导入信息",
+
+                    },
+                ]
 
             },
             {
-                icon: "el-icon-upload",
-                index: "/importStu",
-                title: "导入信息",
+                icon: "el-icon-lx-sort",
+                index: "/",
+                title: "寝室管理",
+                subs: [
+                    {
+                        icon: "el-icon-upload",
+                        index: "/",
+                        title: "导入信息",
+
+                    },
+                ]
 
             },
             {

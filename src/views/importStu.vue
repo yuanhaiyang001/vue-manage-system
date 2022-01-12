@@ -119,7 +119,7 @@
         color: #00a854;
     }
     .demo-table{
-        background: #00a854;
+        /*background: #00a854;*/
         /*color: #00a854;*/
         border-left-left: 10px;
         width: 75%;

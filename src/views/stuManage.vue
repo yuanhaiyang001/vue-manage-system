@@ -28,7 +28,7 @@
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
-            <el-table :data="list" v-loading = "query.isLoading" border class="table" ref="multipleTable"
+            <el-table :data="list" v-loading = "isLoading" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
                 <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
@@ -131,7 +131,7 @@
         methods: {
             //获取表格信息
             getTableData() {
-                this.query.isLoading = true;
+                this.isLoading = true;
                 axios.post('http://localhost:8762/admin/userManage/queryStuInfo', {
                     onlineStatus: this.query.onlineStatus === '2' ? null : this.query.onlineStatus,
                     stuName: this.query.stuName,
@@ -157,7 +157,7 @@
                         this.list = res.data.data.list;
                         this.query.total = res.data.data.total;
                         setTimeout(()=>{
-                            this.query.isLoading = false;
+                            this.isLoading = false;
                         }, 0.5 * 1000);
                     }
                 })
@@ -321,13 +321,17 @@
                     responseType: 'arraybuffer'
                 }).then(res=>{
                     // 利用a标签自定义下载文件名
-                    const link = document.createElement('a')
+                    const link = document.createElement('a');
                     // 创建Blob对象，设置文件类型
-                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-                    let objectUrl = URL.createObjectURL(blob) // 创建URL
-                    link.href = objectUrl
-                    link.download = '学生信息.xlsx' // 自定义文件名
-                    link.click() // 下载文件
+                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+                    let objectUrl = URL.createObjectURL(blob); // 创建URL
+                    link.href = objectUrl;
+                    let date = new Date();
+                    let year = date.getUTCFullYear();
+                    let month = date.getUTCMonth() + 1;
+                    let day = date.getUTCDate();
+                    link.download = year +"-"+ month +"-"+ day + "导出学生信息.xlsx"; //自定义文件名
+                    link.click(); // 下载文件
                     URL.revokeObjectURL(objectUrl); // 释放内存
                 })
             }
