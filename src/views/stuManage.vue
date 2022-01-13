@@ -19,8 +19,10 @@
                 姓名：
                 <el-input v-model="query.stuName" placeholder="姓名" class="handle-input mr10"></el-input>
                 电话：
-                <el-input v-model="query.phone" placeholder="电话" class="handle-input mr10"></el-input><br>
-                <el-button type="text" icon="el-icon-printer" class="handle-select mr10" @click="exportStuInfo">导出</el-button>
+                <el-input v-model="query.phone" placeholder="电话" class="handle-input mr10"></el-input>
+                <br>
+                <el-button type="text" icon="el-icon-printer" class="handle-select mr10" @click="exportStuInfo">导出
+                </el-button>
                 学院：
                 <el-input v-model="query.college" placeholder="学院" class="handle-input mr10"></el-input>
                 专业：
@@ -28,7 +30,7 @@
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
-            <el-table :data="list" v-loading = "isLoading" border class="table" ref="multipleTable"
+            <el-table :data="list" v-loading="isLoading" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
                 <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
@@ -44,7 +46,8 @@
                                     : 'info'
                             " style="margin-right: 15px">{{ scope.row.onlineStatus === '1' ? "在线" : "离线"}}
                         </el-tag>
-                        <el-button type="text" style="color: red" @click="offline(scope.row.userNo)">{{ scope.row.onlineStatus === '1' ? "下线" : ""}}
+                        <el-button type="text" style="color: red" @click="offline(scope.row.userNo)">{{
+                            scope.row.onlineStatus === '1' ? "下线" : ""}}
                         </el-button>
                     </template>
                 </el-table-column>
@@ -60,7 +63,8 @@
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="query.pageIndex"
+                <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                               :current-page="query.pageIndex"
                                :page-size="query.pageSize"
                                :total="query.total"
                                :page-sizes="[10,20,30,50]"
@@ -99,31 +103,31 @@
     export default {
         name: "stuManage",
         data() {
-          return {
-              //学生查询参数
-              query: reactive({
-                  pageIndex: 1,
-                  onlineStatus: null,
-                  stuNo: "",
-                  stuName: "",
-                  phone: "",
-                  college: "",
-                  discipline: "",
-                  pageNo: 1,
-                  pageSize: 10,
-                  total: 0,
-              }),
-              isLoading: false,
-              //列表数据
-              list: null,
-              editVisible: ref(false),
-              //编辑参数
-              editInfo: reactive({
-                  stuNo: "",
-                  college: "",
-                  discipline: "",
-              }),
-          }
+            return {
+                //学生查询参数
+                query: reactive({
+                    pageIndex: 1,
+                    onlineStatus: null,
+                    stuNo: "",
+                    stuName: "",
+                    phone: "",
+                    college: "",
+                    discipline: "",
+                    pageNo: 1,
+                    pageSize: 10,
+                    total: 0,
+                }),
+                isLoading: false,
+                //列表数据
+                list: null,
+                editVisible: ref(false),
+                //编辑参数
+                editInfo: reactive({
+                    stuNo: "",
+                    college: "",
+                    discipline: "",
+                }),
+            }
         },
         mounted() {
             this.getTableData();
@@ -146,17 +150,17 @@
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
-                            router.push("/login");
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
                     } else {
                         this.list = res.data.data.list;
                         this.query.total = res.data.data.total;
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             this.isLoading = false;
                         }, 0.5 * 1000);
                     }
@@ -206,7 +210,7 @@
 
             //学生下线
             offline(stuNo) {
-                console.log("学生下线："+stuNo);
+                console.log("学生下线：" + stuNo);
                 axios.post('http://localhost:8762/admin/userManage/updateStuInfo', {
                     userNo: stuNo,
                     onlineStatus: "0",
@@ -216,8 +220,10 @@
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -225,7 +231,7 @@
                         this.query.isLoading = true;
                         this.getTableData();
                         ElMessage.success(res.data.message);
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             this.query.isLoading = false;
                         }, 0.5 * 1000);
                     }
@@ -237,39 +243,40 @@
                 // 二次确认删除
                 ElMessageBox.confirm("确定要删除吗？", "提示", {
                     type: "warning",
-                })
-                    .then(() => {
-                        console.log("删除学生"+stuNo);
-                        axios.post('http://localhost:8762/admin/userManage/delStuInfo', {
-                            stuNo: stuNo,
-                        }, {
-                            headers: {
-                                authorization: localStorage.getItem("token")
-                            }
-                        }).then(res => {
-                            if (res.data.code != 1000) {
-                                if (res.data.code === 999) {
-                                }
+                }).then(() => {
+                    console.log("删除学生" + stuNo);
+                    axios.post('http://localhost:8762/admin/userManage/delStuInfo', {
+                        stuNo: stuNo,
+                    }, {
+                        headers: {
+                            authorization: localStorage.getItem("token")
+                        }
+                    }).then(res => {
+                        if (res.data.code !== 1000) {
+                            if (res.data.code === 999) {
                                 ElMessage.error(res.data.message);
-                                return false;
-                            } else {
-                                this.query.isLoading = true;
-                                this.getTableData();
-                                setTimeout(()=>{
-                                    this.query.isLoading = false;
-                                }, 0.5 * 1000);
+                                this.$router.push("/login");
                             }
-                        })
-                        ElMessage.success("删除成功");
-                        this.getTableData();
-                    })
+                            ElMessage.error(res.data.message);
+                            return false;
+                        } else {
+                            this.query.isLoading = true;
+                            this.getTableData();
+                            setTimeout(() => {
+                                this.query.isLoading = false;
+                            }, 0.5 * 1000);
+                        }
+                    });
+                    ElMessage.success("删除成功");
+                    this.getTableData();
+                })
                     .catch((error) => {
-                        ElMessageBox.alert("删除失败"+error)
+                        ElMessageBox.alert("删除失败" + error)
                     });
             },
 
             //编辑信息
-            handleEdit(stuNo){
+            handleEdit(stuNo) {
                 this.editInfo.stuNo = stuNo;
                 this.editVisible = true;
             },
@@ -286,8 +293,10 @@
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -295,7 +304,7 @@
                         this.query.isLoading = true;
                         this.getTableData();
                         ElMessage.success(res.data.message);
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             this.query.isLoading = false;
                         }, 0.5 * 1000);
                     }
@@ -304,8 +313,8 @@
             },
 
             //导出excel
-            exportStuInfo(){
-                axios.post('http://localhost:8762/admin/userManage/exportStuInfo',{
+            exportStuInfo() {
+                axios.post('http://localhost:8762/admin/userManage/exportStuInfo', {
                     onlineStatus: this.query.onlineStatus === '2' ? null : this.query.onlineStatus,
                     stuName: this.query.stuName,
                     stuNo: this.query.stuNo,
@@ -314,25 +323,34 @@
                     discipline: this.query.discipline,
                     pageNo: this.query.pageNo,
                     pageSize: this.query.pageSize,
-                },{
+                }, {
                     headers: {
                         authorization: localStorage.getItem("token"),
                     },
                     responseType: 'arraybuffer'
-                }).then(res=>{
-                    // 利用a标签自定义下载文件名
-                    const link = document.createElement('a');
-                    // 创建Blob对象，设置文件类型
-                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
-                    let objectUrl = URL.createObjectURL(blob); // 创建URL
-                    link.href = objectUrl;
-                    let date = new Date();
-                    let year = date.getUTCFullYear();
-                    let month = date.getUTCMonth() + 1;
-                    let day = date.getUTCDate();
-                    link.download = year +"-"+ month +"-"+ day + "导出学生信息.xlsx"; //自定义文件名
-                    link.click(); // 下载文件
-                    URL.revokeObjectURL(objectUrl); // 释放内存
+                }).then(res => {
+                    if (res.data.code !== 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            this.$router.push("/login");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        // 利用a标签自定义下载文件名
+                        const link = document.createElement('a');
+                        // 创建Blob对象，设置文件类型
+                        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+                        let objectUrl = URL.createObjectURL(blob); // 创建URL
+                        link.href = objectUrl;
+                        let date = new Date();
+                        let year = date.getUTCFullYear();
+                        let month = date.getUTCMonth() + 1;
+                        let day = date.getUTCDate();
+                        link.download = year + "-" + month + "-" + day + "导出学生信息.xlsx"; //自定义文件名
+                        link.click(); // 下载文件
+                        URL.revokeObjectURL(objectUrl); // 释放内存
+                    }
                 })
             }
 
@@ -369,7 +387,8 @@
         margin-right: 100px;
         margin-bottom: 10px;
     }
-    .reset{
+
+    .reset {
         margin-left: 58px;
     }
 

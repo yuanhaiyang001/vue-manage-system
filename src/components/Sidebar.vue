@@ -44,10 +44,15 @@ export default {
                 title: "系统首页",
             },
             {
-                icon: "el-icon-lx-sort",
-                index: "/stuManage",
+                icon: "el-icon-lx-friend",
                 title: "学生管理",
                 subs: [
+                    {
+                        icon: "el-icon-lx-sort",
+                        index: "/stuManage",
+                        title: "学生列表",
+
+                    },
                     {
                         icon: "el-icon-upload",
                         index: "/importStu",
@@ -58,7 +63,7 @@ export default {
 
             },
             {
-                icon: "el-icon-lx-sort",
+                icon: "el-icon-lx-home",
                 index: "/",
                 title: "寝室管理",
                 subs: [

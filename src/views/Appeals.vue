@@ -12,6 +12,7 @@
             <el-tabs v-model="message">
                 <el-tab-pane :label="`${appealStatusCount[0].label}(${appealStatusCount[0].total})`" name="first">
                     <el-table :data="unhandleList" :show-header="false" style="width: 100%" v-loading="isLoading">
+                        <el-table-column type="index" width="55"></el-table-column>
                         <el-table-column :show-overflow-tooltip="true">
                             <template #default="scope">
                                 <span class="message-title">{{"【"+scope.row.appealTitle+"】" + scope.row.appealContent}}</span>
@@ -25,20 +26,22 @@
                         </el-table-column>
                     </el-table>
                     <div class="pagination">
-                        <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="query.pageIndex"
-                                       :page-size="query.pageSize"
-                                       :total="query.total"
+                        <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                       :current-page="waitHandleQuery.pageIndex"
+                                       :page-size="waitHandleQuery.pageSize"
+                                       :total="waitHandleQuery.total"
                                        :page-sizes="[10,20,30,50]"
-                                       @prev-click="prePage"
-                                       @next-click="nextPage"
-                                       @size-change="sizeChange"
-                                       @current-change="currentPage"></el-pagination>
+                                       @prev-click="prePage1"
+                                       @next-click="nextPage1"
+                                       @size-change="sizeChange1"
+                                       @current-change="currentPage1"></el-pagination>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane :label="`${appealStatusCount[1].label}(${appealStatusCount[1].total})`" name="second">
                     <template v-if="message === 'second'">
                         <el-table :data="handledList" :show-header="false" style="width: 100%" v-loading="isLoading">
-                            <el-table-column>
+                            <el-table-column type="index" width="55"></el-table-column>
+                            <el-table-column :show-overflow-tooltip="true">
                                 <template #default="scope">
                                     <span class="message-title">{{"【"+scope.row.appealTitle+"】" + scope.row.appealContent}}</span>
                                 </template>
@@ -47,40 +50,58 @@
                             <el-table-column width="120">
                                 <template #default="scope">
                                     <el-button :type="scope.row.auditStatus === '1'?
-                                                   'success' : 'info'" @click="handleDel(scope.$index)" disabled="false">
+                                                   'success' : 'info'" @click="handleDel(scope.$index)"
+                                               disabled="false">
                                         {{scope.row.auditStatus === '1' ? "通过" : "驳回"}}
                                     </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">删除全部</el-button>
+                        <div class="pagination">
+                            <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                           :current-page="handledQuery.pageIndex"
+                                           :page-size="handledQuery.pageSize"
+                                           :total="handledQuery.total"
+                                           :page-sizes="[10,20,30,50]"
+                                           @prev-click="prePage2"
+                                           @next-click="nextPage2"
+                                           @size-change="sizeChange2"
+                                           @current-change="currentPage2"></el-pagination>
                         </div>
                     </template>
                 </el-tab-pane>
                 <el-tab-pane :label="`${appealStatusCount[2].label}(${appealStatusCount[2].total})`" name="third">
                     <template v-if="message === 'third'">
-                        <el-table :data="state.recycle" :show-header="false" style="width: 100%" v-loading="isLoading">
-                            <el-table-column>
+                        <el-table :data="revokedList" :show-header="false" style="width: 100%" v-loading="isLoading">
+                            <el-table-column type="index" width="55"></el-table-column>
+                            <el-table-column :show-overflow-tooltip="true">
                                 <template #default="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
+                                    <span class="message-title">{{"【"+scope.row.appealTitle+"】" + scope.row.appealContent}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="date" width="150"></el-table-column>
                             <el-table-column width="120">
                                 <template #default="scope">
-                                    <el-button @click="handleRestore(scope.$index)">还原</el-button>
+                                    <el-button @click="revokeDetails(scope.$index)">查看</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">清空回收站</el-button>
+                        <div class="pagination">
+                            <el-pagination background layout="total, sizes, prev, pager, next, jumper"
+                                           :current-page="revokedQuery.pageIndex"
+                                           :page-size="revokedQuery.pageSize"
+                                           :total="revokedQuery.total"
+                                           :page-sizes="[10,20,30,50]"
+                                           @prev-click="prePage3"
+                                           @next-click="nextPage3"
+                                           @size-change="sizeChange3"
+                                           @current-change="currentPage3"></el-pagination>
                         </div>
                     </template>
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog title="审核" v-model="detailVisible" width="25%">
+        <el-dialog title="审核" v-model="auditDetailVisible" width="25%">
             <el-form label-width="27%">
                 <el-form-item label="时间">
                     <el-input v-model="appealDetails.createTime" type="text" style="width: 70%"
@@ -101,11 +122,37 @@
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button type="success" @click="doAudit(appealDetails.appealNo,'1'),visible = false">通 过</el-button>
+                    <el-button type="success"
+                               @click="doAudit(appealDetails.appealNo,'1'),visible = false">通 过</el-button>
                     <el-button type="danger" @click="doAudit(appealDetails.appealNo, '2')">驳 回</el-button>
-                    <el-button @click="detailVisible = false">取 消</el-button>
+                    <el-button @click="auditDetailVisible = false">取 消</el-button>
                 </span>
             </template>
+        </el-dialog>
+
+        <el-dialog title="详情" v-model="detailVisible" width="25%">
+            <el-form label-width="27%">
+                <el-form-item label="时间">
+                    <el-input v-model="appealDetails.createTime" type="text" style="width: 70%"
+                              readonly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="撤销时间">
+                    <el-input v-model="appealDetails.revokeTime" type="text" style="width: 70%"
+                              readonly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="发起人">
+                    <el-input v-model="appealDetails.createUser" type="text" style="width: 70%"
+                              readonly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="标题">
+                    <el-input v-model="appealDetails.appealTitle" type="textarea" style="width: 70%"
+                              readonly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="内容">
+                    <el-input v-model="appealDetails.appealContent" type="textarea" rows="4" style="width: 70%;"
+                              readonly="true"></el-input>
+                </el-form-item>
+            </el-form>
         </el-dialog>
     </div>
 </template>
@@ -116,59 +163,23 @@
     import axios from "axios";
 
     export default {
-        name: "tabs",
-        setup() {
-            const message = ref("first");
-            const state = reactive({
-                unread: [
-                    {
-                        date: "2018-04-19 20:00:00",
-                        title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
-                    },
-                    {
-                        date: "2018-04-19 21:00:00",
-                        title: "今晚12点整发大红包，先到先得",
-                    },
-                ],
-                read: [
-                    {
-                        date: "2018-04-19 20:00:00",
-                        title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
-                    },
-                ],
-                recycle: [
-                    {
-                        date: "2018-04-19 20:00:00",
-                        title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
-                    },
-                ],
-            });
-
-            const handleRead = (index) => {
-                const item = state.unread.splice(index, 1);
-                console.log(item);
-                state.read = item.concat(state.read);
-            };
-            const handleDel = (index) => {
-                const item = state.read.splice(index, 1);
-                state.recycle = item.concat(state.recycle);
-            };
-            const handleRestore = (index) => {
-                const item = state.recycle.splice(index, 1);
-                state.read = item.concat(state.read);
-            };
-
-            return {
-                message,
-                state,
-                handleRead,
-                handleDel,
-                handleRestore,
-            };
-        },
+        name: "appeals",
         data() {
             return {
-                query: reactive({
+                message: ref("first"),
+                waitHandleQuery: reactive({
+                    pageIndex: 1,
+                    pageNo: 1,
+                    pageSize: 10,
+                    total: 0,
+                }),
+                handledQuery: reactive({
+                    pageIndex: 1,
+                    pageNo: 1,
+                    pageSize: 10,
+                    total: 0,
+                }),
+                revokedQuery: reactive({
                     pageIndex: 1,
                     pageNo: 1,
                     pageSize: 10,
@@ -189,6 +200,7 @@
                     total: 0
                 }],
 
+                auditDetailVisible: ref(false),
                 detailVisible: ref(false),
                 appealDetails: {
                     appealNo: "",
@@ -197,6 +209,7 @@
                     createUser: "超级管理员",
                     appealTitle: "标题",
                     appealContent: "内容adada该系统将于今晚凌晨2点到5点进行升级维护",
+                    revokeTime: "",
                 },
 
                 unhandleList: [],
@@ -209,11 +222,12 @@
             this.getListData();
         },
         methods: {
+            //刷新页面
             reload() {
                 this.getAppealSum();
                 this.getListData();
                 this.isLoading = true;
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.isLoading = false;
                 }, 0.5 * 1000)
             },
@@ -225,10 +239,10 @@
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
-                            router.push("/login");
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -245,17 +259,17 @@
             getListData() {
                 axios.post('http://localhost:8762/admin/appealManage/list', {
                     appealStatus: "0",
-                    pageNo: this.query.pageNo,
-                    pageSize: this.query.pageSize,
+                    pageNo: this.waitHandleQuery.pageNo,
+                    pageSize: this.waitHandleQuery.pageSize,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
-                            router.push("/login");
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -263,6 +277,7 @@
                         console.log(res.data.data.list);
                         setTimeout(() => {
                             this.unhandleList = res.data.data.list;
+                            this.waitHandleQuery.total = res.data.data.total;
                         }, 0.5 * 1000);
 
                     }
@@ -270,17 +285,17 @@
 
                 axios.post('http://localhost:8762/admin/appealManage/list', {
                     appealStatus: "1",
-                    pageNo: this.query.pageNo,
-                    pageSize: this.query.pageSize,
+                    pageNo: this.handledQuery.pageNo,
+                    pageSize: this.handledQuery.pageSize,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
-                            router.push("/login");
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -288,6 +303,7 @@
                         console.log(res.data.data.list);
                         setTimeout(() => {
                             this.handledList = res.data.data.list;
+                            this.handledQuery.total = res.data.data.total;
                         }, 0.5 * 1000);
 
                     }
@@ -295,17 +311,17 @@
 
                 axios.post('http://localhost:8762/admin/appealManage/list', {
                     appealStatus: "2",
-                    pageNo: this.query.pageNo,
-                    pageSize: this.query.pageSize,
+                    pageNo: this.revokedQuery.pageNo,
+                    pageSize: this.revokedQuery.pageSize,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    if (res.data.code != 1000) {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
-                            router.push("/login");
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -313,6 +329,7 @@
                         console.log(res.data.data.list);
                         setTimeout(() => {
                             this.revokedList = res.data.data.list;
+                            this.revokedQuery.total = res.data.data.total;
                         }, 0.5 * 1000);
 
                     }
@@ -323,6 +340,13 @@
             handleRead(index) {
                 console.log(this.appealDetails);
                 this.appealDetails = this.unhandleList[index];
+                this.auditDetailVisible = true;
+            },
+
+            //撤销详情
+            revokeDetails(index) {
+                console.log(this.appealDetails);
+                this.appealDetails = this.revokedList[index];
                 this.detailVisible = true;
             },
 
@@ -331,23 +355,23 @@
                 console.log(appealNo + "审核" + auditStatus === '1' ? "通过" : "驳回");
                 axios.post('http://localhost:8762/admin/appealManage/doAudit', {
                     appealNo: appealNo,
-                    auditStatus : auditStatus,
-                },{
+                    auditStatus: auditStatus,
+                }, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
-                }).then(res=>{
-                    if (res.data.code != 1000) {
+                }).then(res => {
+                    if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
-                            router.push("/login");
+                            this.$router.push("/login");
                         }
                         ElMessage.error(res.data.message);
                         return false;
                     } else {
                         setTimeout(() => {
                             ElMessage.success(res.data.message);
-                            this.detailVisible = false;
+                            this.auditDetailVisible = false;
                             this.reload();
                         }, 0.5 * 1000);
                         console.log(this.appealStatusCount);
@@ -357,26 +381,74 @@
             },
 
             //上一页
-            prePage(currentNo) {
-                this.query.pageNo = currentNo;
+            prePage1(currentNo) {
+                this.waitHandleQuery.pageNo = currentNo;
                 this.getListData();
             },
 
             //下一页
-            nextPage(currentNo) {
-                this.query.pageNo = currentNo;
+            nextPage1(currentNo) {
+                this.waitHandleQuery.pageNo = currentNo;
                 this.getListData();
             },
 
             //pagesize改变
-            sizeChange(size) {
-                this.query.pageSize = size;
+            sizeChange1(size) {
+                this.waitHandleQuery.pageSize = size;
                 this.getListData();
             },
 
             //当前页改变
-            currentPage(currentNo) {
-                this.query.pageNo = currentNo;
+            currentPage1(currentNo) {
+                this.waitHandleQuery.pageNo = currentNo;
+                this.getListData();
+            },
+
+            //上一页
+            prePage2(currentNo) {
+                this.handledQuery.pageNo = currentNo;
+                this.getListData();
+            },
+
+            //下一页
+            nextPage2(currentNo) {
+                this.handledQuery.pageNo = currentNo;
+                this.getListData();
+            },
+
+            //pagesize改变
+            sizeChange2(size) {
+                this.handledQuery.pageSize = size;
+                this.getListData();
+            },
+
+            //当前页改变
+            currentPage2(currentNo) {
+                this.handledQuery.pageNo = currentNo;
+                this.getListData();
+            },
+
+            //上一页
+            prePage3(currentNo) {
+                this.revokedQuery.pageNo = currentNo;
+                this.getListData();
+            },
+
+            //下一页
+            nextPage3(currentNo) {
+                this.revokedQuery.pageNo = currentNo;
+                this.getListData();
+            },
+
+            //pagesize改变
+            sizeChange3(size) {
+                this.revokedQuery.pageSize = size;
+                this.getListData();
+            },
+
+            //当前页改变
+            currentPage3(currentNo) {
+                this.revokedQuery.pageNo = currentNo;
                 this.getListData();
             },
         }
