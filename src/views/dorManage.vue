@@ -9,26 +9,18 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-select v-model="query.onlineStatus" placeholder="在线状态" class="handle-select mr10">
+                <el-select v-model="query.onlineStatus" placeholder="使用状态" class="handle-select mr10">
                     <el-option key="2" label="全部" value="2"></el-option>
-                    <el-option key="1" label="在线" value="1"></el-option>
-                    <el-option key="0" label="离线" value="0"></el-option>
+                    <el-option key="1" label="启用" value="1"></el-option>
+                    <el-option key="0" label="禁用" value="0"></el-option>
                 </el-select>
-                学号：
-                <el-input v-model="query.stuNo" placeholder="学号" class="handle-input mr10"></el-input>
-                姓名：
-                <el-input v-model="query.stuName" placeholder="姓名" class="handle-input mr10"></el-input>
+                寝室号：
+                <el-input v-model="query.stuNo" placeholder="寝室号" class="handle-input mr10"></el-input>
+                类型：
+                <el-input v-model="query.stuName" placeholder="类型" class="handle-input mr10"></el-input>
                 寝室：
                 <el-input v-model="query.dorNo" placeholder="寝室" class="handle-input mr10"></el-input>
-                电话：
-                <el-input v-model="query.phone" placeholder="电话" class="handle-input mr10"></el-input>
                 <br>
-                <el-button type="text" icon="el-icon-printer" class="handle-select mr10" @click="exportStuInfo">导出
-                </el-button>
-                学院：
-                <el-input v-model="query.college" placeholder="学院" class="handle-input mr10"></el-input>
-                专业：
-                <el-input v-model="query.discipline" placeholder="专业" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
@@ -103,7 +95,7 @@
     import axios from "axios";
 
     export default {
-        name: "stuManage",
+        name: "dorManage",
         data() {
             return {
                 //学生查询参数

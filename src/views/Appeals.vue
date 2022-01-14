@@ -18,7 +18,7 @@
                                 <span class="message-title">{{"【"+scope.row.appealTitle+"】" + scope.row.appealContent}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="date" width="180"></el-table-column>
+                        <el-table-column prop="createTime" width="180"></el-table-column>
                         <el-table-column width="120">
                             <template #default="scope">
                                 <el-button size="small" @click="handleRead(scope.$index)">查看详情</el-button>

@@ -22,31 +22,40 @@ const routes = [
                 path: "/stuManage",
                 name: "stuManage",
                 meta: {
-                    title: '学生管理'
+                    title: '学生列表'
                 },
                 component: () => import("../views/stuManage.vue")
-            },{
+            }, {
                 path: "/importStu",
                 name: "importStu",
                 meta: {
-                    title: '导入信息'
+                    title: '导入学生信息'
                 },
                 component: () => import("../views/importStu.vue")
+            },
+            {
+                path: "/dorManage",
+                name: "dorManage",
+                meta: {
+                    title: '寝室列表'
+                },
+                component: () => import("../views/dorManage.vue")
             }, {
+                path: "/importDor",
+                name: "importDor",
+                meta: {
+                    title: '导入寝室信息'
+                },
+                component: () => import("../views/importDor.vue")
+            },
+            {
                 path: "/appeals",
                 name: "appeals",
                 meta: {
                     title: '服务信息'
                 },
                 component: () => import("../views/Appeals.vue")
-            },{
-                path: "/table",
-                name: "basetable",
-                meta: {
-                    title: '表格'
-                },
-                component: () => import ( /* webpackChunkName: "table" */ "../views/BaseTable.vue")
-            }, {
+            },   {
                 path: "/charts",
                 name: "basecharts",
                 meta: {
@@ -60,20 +69,6 @@ const routes = [
                     title: '表单'
                 },
                 component: () => import ( /* webpackChunkName: "form" */ "../views/BaseForm.vue")
-            }, {
-                path: "/tabs",
-                name: "tabs",
-                meta: {
-                    title: 'tab标签'
-                },
-                component: () => import ( /* webpackChunkName: "tabs" */ "../views/Tabs.vue")
-            }, {
-                path: "/donate",
-                name: "donate",
-                meta: {
-                    title: '鼓励作者'
-                },
-                component: () => import ( /* webpackChunkName: "donate" */ "../views/Donate.vue")
             }, {
                 path: "/permission",
                 name: "permission",

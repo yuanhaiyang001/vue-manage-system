@@ -5,10 +5,10 @@
             <template v-for="item in items">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
-                        <template #title>
-                            <i :class="item.icon"></i>
-                            <span>{{ item.title }}</span>
-                        </template>
+                            <template #title>
+                                <i :class="item.icon"></i>
+                                <span>{{ item.title }}</span>
+                            </template>
                         <template v-for="subItem in item.subs">
                             <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
                                 <template #title>{{ subItem.title }}</template>
@@ -45,6 +45,7 @@ export default {
             },
             {
                 icon: "el-icon-lx-friend",
+                index: "stuManage",
                 title: "学生管理",
                 subs: [
                     {
@@ -64,16 +65,23 @@ export default {
             },
             {
                 icon: "el-icon-lx-home",
-                index: "/",
+                index: "dorManage",
                 title: "寝室管理",
                 subs: [
                     {
+                        icon: "el-icon-lx-sort",
+                        index: "/dorManage",
+                        title: "寝室列表",
+
+                    },
+                    {
                         icon: "el-icon-upload",
-                        index: "/",
+                        index: "/importDor",
                         title: "导入信息",
 
                     },
-                ]
+
+                ],
 
             },
             {
@@ -81,16 +89,6 @@ export default {
                 index: "/appeals",
                 title: "服务消息",
 
-            },
-            {
-                icon: "el-icon-lx-cascades",
-                index: "/table",
-                title: "基础表格",
-            },
-            {
-                icon: "el-icon-lx-copy",
-                index: "/tabs",
-                title: "tab选项卡",
             },
             {
                 icon: "el-icon-lx-calendar",
@@ -146,11 +144,6 @@ export default {
                         title: "404页面",
                     },
                 ],
-            },
-            {
-                icon: "el-icon-lx-redpacket_fill",
-                index: "/donate",
-                title: "支持作者",
             },
         ];
 
