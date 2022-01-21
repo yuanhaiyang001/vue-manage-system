@@ -92,7 +92,7 @@
                                 localStorage.setItem("token", authorization);
                                 setTimeout(() => {
                                     this.$router.push("/dashboard");
-                                }, 1000);
+                                }, 1.5*1000);
                             }
                         });
                     } else {
