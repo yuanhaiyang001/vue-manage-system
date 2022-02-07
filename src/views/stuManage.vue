@@ -333,28 +333,19 @@
                     },
                     responseType: 'arraybuffer'
                 }).then(res => {
-                    if (res.data.code !== 1000) {
-                        if (res.data.code === 999) {
-                            ElMessage.error(res.data.message);
-                            this.$router.push("/login");
-                        }
-                        ElMessage.error(res.data.message);
-                        return false;
-                    } else {
-                        // 利用a标签自定义下载文件名
-                        const link = document.createElement('a');
-                        // 创建Blob对象，设置文件类型
-                        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
-                        let objectUrl = URL.createObjectURL(blob); // 创建URL
-                        link.href = objectUrl;
-                        let date = new Date();
-                        let year = date.getUTCFullYear();
-                        let month = date.getUTCMonth() + 1;
-                        let day = date.getUTCDate();
-                        link.download = year + "-" + month + "-" + day + "导出学生信息.xlsx"; //自定义文件名
-                        link.click(); // 下载文件
-                        URL.revokeObjectURL(objectUrl); // 释放内存
-                    }
+                    // 利用a标签自定义下载文件名
+                    const link = document.createElement('a');
+                    // 创建Blob对象，设置文件类型
+                    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+                    let objectUrl = URL.createObjectURL(blob); // 创建URL
+                    link.href = objectUrl;
+                    let date = new Date();
+                    let year = date.getUTCFullYear();
+                    let month = date.getUTCMonth() + 1;
+                    let day = date.getUTCDate();
+                    link.download = year + "-" + month + "-" + day + "导出学生信息.xlsx"; //自定义文件名
+                    link.click(); // 下载文件
+                    URL.revokeObjectURL(objectUrl); // 释放内存
                 })
             }
 

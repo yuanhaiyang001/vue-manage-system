@@ -13,7 +13,7 @@
                     <el-upload
                             class="upload-demo"
                             ref="upload"
-                            action="http://localhost:8762/admin/userManage/preViewUserInfo"
+                            :action="getUploadUrl()"
                             :headers="uploadHeaders"
                             :on-success="uploadRes"
                             accept=".xls, .xlsx"
@@ -24,8 +24,10 @@
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件，且不超过500kb</div>
                     </el-upload>
-                    <el-button style="margin-left: 10px;" size="small" type="success" @click="handleUpload">查看预览数据</el-button>
-                    <el-button style="margin-left: 50px;" size="small" type="success" @click="">确认上传</el-button>
+                    <el-button style="margin-left: 10px;" size="small" type="success" @click="preView">查看预览数据
+                    </el-button>
+                    <el-button style="margin-left: 50px;" size="small" type="success" @click="handleUpload">确认上传
+                    </el-button>
 
 
                     <div class="upload-tips">
@@ -43,7 +45,7 @@
                 </div>
             </div>
             <div style="text-align: center; margin-top: 20px; margin-bottom: 10px; color: #376da8">导入预览</div>
-            <el-table :data="list" v-loading="" height="450" border class="table" ref="multipleTable"
+            <el-table :data="list" v-loading="isLoading" height="450" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
                 <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
@@ -64,16 +66,20 @@
         name: "importStu",
         data() {
             return {
+                isLoading: false,
+                baseUploadUrl: 'http://localhost:8762/admin/userManage',
+                //0预览，1上传
+                action: '0',
                 uploadHeaders: {
                     authorization: localStorage.getItem("token")
                 },
-                demoList:[{
+                demoList: [{
                     userNo: "201810414427",
                     realName: "张三",
                     phone: "187*******8",
                     college: "计算机学院",
                     discipline: "软件工程",
-                },{
+                }, {
                     userNo: "201810414428",
                     realName: "李四",
                     phone: "187*******8",
@@ -89,15 +95,25 @@
                 this.fileList = fileList.slice(-3);
             },
             //excel上传
-            handleUpload(file){
+            preView() {
+                // this.isLoading = true;
+                this.action = '0';
                 this.$refs.upload.submit();
-                ElMessage.success("上传成功");
             },
             //上传返回的数据
-            uploadRes(res){
-                console.log(res.data);
-                this.list = res.data;
+            uploadRes(res) {
+                console.log(res);
+            },
+            handleUpload() {
+                this.action = '1';
+                console.log(this.action);
+                console.log(this.getUploadUrl());
+                this.$refs.upload.submit();
+            },
+            getUploadUrl() {
+                return this.action === '0' ? this.baseUploadUrl + "/preViewUserInfo" : this.baseUploadUrl + "/importStuInfo";
             }
+
         }
     }
 </script>
@@ -109,16 +125,19 @@
         float: left;
         margin-right: 20px;
     }
-    .handle-box{
+
+    .handle-box {
         /*float: bottom;*/
         /*height: 300px;*/
     }
-    .upload-tips{
+
+    .upload-tips {
         /*margin-left: 50px;*/
         text-align: center;
         color: #00a854;
     }
-    .demo-table{
+
+    .demo-table {
         /*background: #00a854;*/
         /*color: #00a854;*/
         border-left-left: 10px;
