@@ -26,9 +26,23 @@
                 <el-button type="text" icon="el-icon-printer" class="handle-select mr10" @click="exportStuInfo">导出
                 </el-button>
                 学院：
-                <el-input v-model="query.college" placeholder="学院" class="handle-input mr10"></el-input>
+                <el-select v-model="query.college" placeholder="学院" class="handle-input mr10">
+                    <el-option
+                            v-for="item in colleges"
+                            :key="item.code"
+                            :label="item.value"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
                 专业：
-                <el-input v-model="query.discipline" placeholder="专业" class="handle-input mr10"></el-input>
+                <el-select v-model="query.discipline" placeholder="专业" class="handle-input mr10">
+                    <el-option
+                            v-for="item in disciplines"
+                            :key="item.code"
+                            :label="item.value"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
@@ -106,6 +120,8 @@
         name: "stuManage",
         data() {
             return {
+                colleges: null,
+                disciplines: null,
                 //学生查询参数
                 query: reactive({
                     pageIndex: 1,
@@ -133,9 +149,19 @@
             }
         },
         mounted() {
+            this.getColleges();
+            this.getDiscipline();
             this.getTableData();
         },
         methods: {
+            //获取学院
+            getColleges() {
+                this.colleges = JSON.parse(sessionStorage.getItem("dicts")).college;
+            },
+            //获取专业
+            getDiscipline() {
+                this.disciplines = JSON.parse(sessionStorage.getItem("dicts")).discipline;
+            },
             //获取表格信息
             getTableData() {
                 this.isLoading = true;

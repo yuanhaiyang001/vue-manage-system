@@ -85,11 +85,12 @@
                                 ElMessage.error(res.data.message);
                                 return false;
                             } else {
-                                this.getMyInfo();
                                 localStorage.setItem("ms_username", this.param.username);
                                 ElMessage.success("用户" + localStorage.getItem("ms_username") + "登录");
                                 let authorization = res.headers.authorization;
                                 localStorage.setItem("token", authorization);
+                                this.getMyInfo();
+                                this.getAllDicts();
                                 setTimeout(() => {
                                     this.$router.push("/dashboard");
                                 }, 1.5*1000);
@@ -113,6 +114,19 @@
                     console.log(res.data.data);
                     sessionStorage.setItem("myInfo", JSON.stringify(res.data.data));
                 })
+            },
+            /**
+             * 字典
+             */
+            getAllDicts() {
+              axios.post('http://localhost:8762/common/dicts',{},{
+                  headers: {
+                      authorization: localStorage.getItem("token")
+                  }
+              }).then(res=> {
+                  console.log(res.data.data);
+                  sessionStorage.setItem("dicts", JSON.stringify(res.data.data));
+              })
             },
         }
 

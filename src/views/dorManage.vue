@@ -24,14 +24,21 @@
                     <el-option key="6" label="6人间" value="6"></el-option>
                 </el-select>
                 学生：
-                <el-input v-model="query.stuName" placeholder="学生" class="handle-input mr10"></el-input>
+                <el-input v-model="query.stuName" placeholder="学生姓名" class="handle-input mr10"></el-input>
                 学号：
                 <el-input v-model="query.stuNo" placeholder="学号" class="handle-input mr10"></el-input>
                 <br/>
                 <el-button type="text" icon="el-icon-printer" class="handle-select mr10" @click="exportStuInfo">导出
                 </el-button>
                 学院：
-                <el-input v-model="query.college" placeholder="学院" class="handle-input mr10" style=""></el-input>
+                <el-select v-model="query.college" placeholder="学院" class="handle-input mr10">
+                    <el-option
+                            v-for="item in colleges"
+                            :key="item.code"
+                            :label="item.value"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
 
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
@@ -121,6 +128,7 @@
         name: "dorManage",
         data() {
             return {
+                colleges: null,
                 //寝室查询参数
                 query: reactive({
                     isUse: null,
@@ -147,9 +155,14 @@
             }
         },
         mounted() {
+            this.getColleges();
             this.getTableData();
         },
         methods: {
+            //获取学院
+            getColleges() {
+                this.colleges = JSON.parse(sessionStorage.getItem("dicts")).college;
+            },
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
@@ -160,6 +173,8 @@
                     stuNo: this.query.stuNo,
                     dorNo: this.query.dorNo,
                     college: this.query.college,
+                    pageNo: this.query.pageNo,
+                    pageSize: this.query.pageSize,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")

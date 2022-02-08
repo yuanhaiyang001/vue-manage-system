@@ -55,7 +55,24 @@ const routes = [
                     title: '服务信息'
                 },
                 component: () => import("../views/Appeals.vue")
-            },   {
+            },
+            {
+                path: "/sysSetting",
+                name: "sysSetting",
+                meta: {
+                    title: '系统设置'
+                },
+                component: () => import("../views/SysSetting.vue")
+            },
+            {
+                path: "/dataDict",
+                name: "dataDict",
+                meta: {
+                    title: '数据字典'
+                },
+                component: () => import("../views/DataDict.vue")
+            },
+            {
                 path: "/charts",
                 name: "basecharts",
                 meta: {

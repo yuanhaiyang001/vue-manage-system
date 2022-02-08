@@ -69,7 +69,7 @@
                 isLoading: false,
                 baseUploadUrl: 'http://localhost:8762/admin/userManage',
                 //0预览，1上传
-                action: '0',
+                action: null,
                 uploadHeaders: {
                     authorization: localStorage.getItem("token")
                 },
@@ -96,22 +96,33 @@
             },
             //excel上传
             preView() {
-                // this.isLoading = true;
                 this.action = '0';
-                this.$refs.upload.submit();
+                this.isLoading = true;
+                setTimeout(()=>{
+                    this.$refs.upload.submit()
+                },1 * 1000);
             },
             //上传返回的数据
             uploadRes(res) {
                 console.log(res);
+                if (this.action === '0'){
+                    this.list = res.data;
+                    ElMessage.success(res.message);
+                }else {
+                    ElMessage.success("上传成功");
+                }
+                this.isLoading = false;
             },
             handleUpload() {
                 this.action = '1';
-                console.log(this.action);
-                console.log(this.getUploadUrl());
-                this.$refs.upload.submit();
+                this.isLoading = true;
+                setTimeout(()=>{
+                    this.$refs.upload.submit()
+                },1 * 1000);
+
             },
             getUploadUrl() {
-                return this.action === '0' ? this.baseUploadUrl + "/preViewUserInfo" : this.baseUploadUrl + "/importStuInfo";
+                return this.action === '1' ? this.baseUploadUrl + "/importStuInfo" : this.baseUploadUrl + "/preViewUserInfo";
             }
 
         }

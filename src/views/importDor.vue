@@ -13,7 +13,7 @@
                     <el-upload
                             class="upload-demo"
                             ref="upload"
-                            action="http://localhost:8762/admin/userManage/preViewUserInfo"
+                            :action="getUploadUrl()"
                             :headers="uploadHeaders"
                             :on-success="uploadRes"
                             accept=".xls, .xlsx"
@@ -24,33 +24,33 @@
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件，且不超过500kb</div>
                     </el-upload>
-                    <el-button style="margin-left: 10px;" size="small" type="success" @click="handleUpload">查看预览数据</el-button>
-                    <el-button style="margin-left: 50px;" size="small" type="success" @click="">确认上传</el-button>
+                    <el-button style="margin-left: 10px;" size="small" type="success" @click="preView">查看预览数据
+                    </el-button>
+                    <el-button style="margin-left: 50px;" size="small" type="success" @click="handleUpload">确认上传
+                    </el-button>
 
 
                     <div class="upload-tips">
-                        excel样例展示
+                        excel样例展示(tips:类型代表几人间，使用状态0禁用，1使用中)
                         <el-table :data="demoList" border class="demo-table" ref="multipleTable"
                                   header-cell-class-name="table-header">
                             <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
-                            <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
-                            <el-table-column prop="realName" label="姓名" align="center"></el-table-column>
-                            <el-table-column prop="phone" label="电话" align="center"></el-table-column>
-                            <el-table-column prop="college" label="学院" align="center"></el-table-column>
-                            <el-table-column prop="discipline" label="专业" align="center"></el-table-column>
+                            <el-table-column prop="dorNo" label="编号" align="center"></el-table-column>
+                            <el-table-column prop="dorType" label="类型" align="center"></el-table-column>
+                            <el-table-column prop="peopleTotal" label="已入住人数" align="center"></el-table-column>
+                            <el-table-column prop="isUse" label="使用状态" align="center"></el-table-column>
                         </el-table>
                     </div>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 20px; margin-bottom: 10px; color: #376da8">导入预览</div>
-            <el-table :data="list" v-loading="" height="450" border class="table" ref="multipleTable"
+            <el-table :data="list" v-loading="isLoading" height="450" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
-                <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
-                <el-table-column prop="realName" label="姓名" align="center"></el-table-column>
-                <el-table-column prop="phone" label="电话" align="center"></el-table-column>
-                <el-table-column prop="college" label="学院" align="center"></el-table-column>
-                <el-table-column prop="discipline" label="专业" align="center"></el-table-column>
+                <el-table-column prop="dorNo" label="编号" align="center"></el-table-column>
+                <el-table-column prop="dorType" label="类型" align="center"></el-table-column>
+                <el-table-column prop="peopleTotal" label="入住人数" align="center"></el-table-column>
+                <el-table-column prop="isUse" label="使用状态" align="center"></el-table-column>
             </el-table>
         </div>
     </div>
@@ -61,24 +61,26 @@
     import axios from "axios";
 
     export default {
-        name: "importDor",
+        name: "importStu",
         data() {
             return {
+                isLoading: false,
+                baseUploadUrl: 'http://localhost:8762/admin/dorManage',
+                //0预览，1上传
+                action: null,
                 uploadHeaders: {
                     authorization: localStorage.getItem("token")
                 },
-                demoList:[{
-                    userNo: "201810414427",
-                    realName: "张三",
-                    phone: "187*******8",
-                    college: "计算机学院",
-                    discipline: "软件工程",
-                },{
-                    userNo: "201810414428",
-                    realName: "李四",
-                    phone: "187*******8",
-                    college: "计算机学院",
-                    discipline: "计算机科学与技术",
+                demoList: [{
+                    dorNo: "102",
+                    dorType: "4",
+                    peopleTotal: "0",
+                    isUse: "1",
+                }, {
+                    dorNo: "203",
+                    dorType: "6",
+                    peopleTotal: "0",
+                    isUse: "0",
                 },],
                 fileList: [],
                 list: null,
@@ -89,15 +91,36 @@
                 this.fileList = fileList.slice(-3);
             },
             //excel上传
-            handleUpload(file){
-                this.$refs.upload.submit();
-                ElMessage.success("上传成功");
+            preView() {
+                this.action = '0';
+                this.isLoading = true;
+                setTimeout(()=>{
+                    this.$refs.upload.submit()
+                },1 * 1000);
             },
             //上传返回的数据
-            uploadRes(res){
-                console.log(res.data);
-                this.list = res.data;
+            uploadRes(res) {
+                console.log(res);
+                if (this.action === '0'){
+                    this.list = res.data;
+                    ElMessage.success(res.message);
+                }else {
+                    ElMessage.success("上传成功");
+                }
+                this.isLoading = false;
+            },
+            handleUpload() {
+                this.action = '1';
+                this.isLoading = true;
+                setTimeout(()=>{
+                    this.$refs.upload.submit()
+                },1 * 1000);
+
+            },
+            getUploadUrl() {
+                return this.action === '1' ? this.baseUploadUrl + "/importDorInfo" : this.baseUploadUrl + "/preViewDorInfo";
             }
+
         }
     }
 </script>
@@ -109,16 +132,19 @@
         float: left;
         margin-right: 20px;
     }
-    .handle-box{
+
+    .handle-box {
         /*float: bottom;*/
         /*height: 300px;*/
     }
-    .upload-tips{
+
+    .upload-tips {
         /*margin-left: 50px;*/
         text-align: center;
         color: #00a854;
     }
-    .demo-table{
+
+    .demo-table {
         /*background: #00a854;*/
         /*color: #00a854;*/
         border-left-left: 10px;
