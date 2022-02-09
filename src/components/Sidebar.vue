@@ -102,6 +102,16 @@ export default {
                     {
                         index: "/dataDict",
                         title: "数据字典",
+                        subs:[
+                            {
+                                index: "/dictList",
+                                title: "字典列表",
+                            },
+                            {
+                                index: "/addDict",
+                                title: "添加字典",
+                            }
+                        ]
                     }
                 ]
             },

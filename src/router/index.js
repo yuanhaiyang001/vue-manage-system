@@ -65,12 +65,20 @@ const routes = [
                 component: () => import("../views/SysSetting.vue")
             },
             {
-                path: "/dataDict",
-                name: "dataDict",
+                path: "/addDict",
+                name: "addDict",
+                meta: {
+                    title: '添加数据字典'
+                },
+                component: () => import("../views/addDict.vue")
+            },
+            {
+                path: "/dictList",
+                name: "dictList",
                 meta: {
                     title: '数据字典'
                 },
-                component: () => import("../views/DataDict.vue")
+                component: () => import("../views/DictList.vue")
             },
             {
                 path: "/charts",

@@ -43,7 +43,7 @@
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
-            <el-table :data="list" v-loading="isLoading" border class="table" ref="multipleTable"
+            <el-table :data="list" v-loading="isLoading" class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
                 <el-table-column prop="college" label="学院" align="center"></el-table-column>
