@@ -24,14 +24,14 @@ const routes = [
                 meta: {
                     title: '学生列表'
                 },
-                component: () => import("../views/stuManage.vue")
+                component: () => import("../views/StuManage.vue")
             }, {
                 path: "/importStu",
                 name: "importStu",
                 meta: {
                     title: '导入学生信息'
                 },
-                component: () => import("../views/importStu.vue")
+                component: () => import("../views/ImportStu.vue")
             },
             {
                 path: "/dorManage",
@@ -39,14 +39,22 @@ const routes = [
                 meta: {
                     title: '寝室列表'
                 },
-                component: () => import("../views/dorManage.vue")
+                component: () => import("../views/DorManage.vue")
             }, {
                 path: "/importDor",
                 name: "importDor",
                 meta: {
                     title: '导入寝室信息'
                 },
-                component: () => import("../views/importDor.vue")
+                component: () => import("../views/ImportDor.vue")
+            },
+            {
+                path: "/myService",
+                name: "myService",
+                meta: {
+                    title: '我的服务'
+                },
+                component: () => import("../views/MyService.vue")
             },
             {
                 path: "/appeals",
@@ -70,7 +78,7 @@ const routes = [
                 meta: {
                     title: '添加数据字典'
                 },
-                component: () => import("../views/addDict.vue")
+                component: () => import("../views/AddDict.vue")
             },
             {
                 path: "/dictList",

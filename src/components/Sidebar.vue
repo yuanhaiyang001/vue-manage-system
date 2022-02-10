@@ -85,6 +85,12 @@ export default {
 
             },
             {
+                icon: "el-icon-service",
+                index: "/myService",
+                title: "我的服务",
+
+            },
+            {
                 icon: "el-icon-message",
                 index: "/appeals",
                 title: "服务消息",
@@ -140,11 +146,11 @@ export default {
             //         },
             //     ],
             // },
-            // {
-            //     icon: "el-icon-lx-emoji",
-            //     index: "/icon",
-            //     title: "自定义图标",
-            // },
+            {
+                icon: "el-icon-lx-emoji",
+                index: "/icon",
+                title: "自定义图标",
+            },
             // {
             //     icon: "el-icon-pie-chart",
             //     index: "/charts",

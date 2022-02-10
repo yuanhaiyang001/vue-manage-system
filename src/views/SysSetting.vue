@@ -16,6 +16,9 @@
                     <el-form-item label="允许学生用户登录" prop="systemSetting.allowStudentLogin">
                         <el-switch v-model="systemSetting.allowStudentLogin" @change="changeStudentLogin"></el-switch>
                     </el-form-item>
+                    <el-form-item label="允许三方用户登录" prop="systemSetting.allowThirdPartyLogin">
+                        <el-switch v-model="systemSetting.allowThirdPartyLogin" @change="changeThirdLogin"></el-switch>
+                    </el-form-item>
                 </el-form>
             </div>
         </div>
@@ -34,6 +37,7 @@
                 systemSetting:{
                     allowDorManagerLogin: true,
                     allowStudentLogin: true,
+                    allowThirdPartyLogin: true,
                 },
                 isLoading: false,
             }
@@ -45,27 +49,46 @@
             //获取系统设置
             getSystemSetting(){
                 this.isLoading = true;
+                axios.post('http://localhost:8762/common/querySettings',{
+
+                },{
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    console.log(res.data.data);
+                    this.systemSetting.allowDorManagerLogin = res.data.data[0].value === '1' ? true:false;
+                    this.systemSetting.allowStudentLogin = res.data.data[1].value === '1' ? true:false;
+                });
                 setTimeout(()=>{
                     this.isLoading = false;
-                },1 * 1000)
+                },0.5 * 1000)
+
             },
             //禁止/允许宿管登录
             changeDorManagerLogin(e) {
-                if (e === true) {
-                    ElMessageBox.confirm("此修改将会禁止所有学生和宿舍管理员登录，请再次确认是否开启", "警告", {type: 'warning'})
+                if (e === false) {
+                    ElMessageBox.confirm("此修改将会禁止宿舍管理员登录，请再次确认是否修改", "警告", {type: 'warning'})
                         .then(() => {
+                            this.updateSetting({setting:'dor_manager_login',value:'0'});
                             console.log("已禁止所有用户登录");
-                            this.getSystemSetting();
+                            setTimeout(()=>{
+                                this.getSystemSetting();
+                            }, 1000);
+
                         })
                     .catch(()=>{
                         console.log("取消操作");
                         this.getSystemSetting();
                     })
                 }else {
-                    ElMessageBox.confirm("此修改将会允许所有学生和宿舍管理员登录，请再次确认是否关闭", "警告", {type: 'warning'})
+                    ElMessageBox.confirm("此修改将会允许宿舍管理员登录，请再次确认是否做修改", "警告", {type: 'warning'})
                         .then(() => {
+                            this.updateSetting({setting:'dor_manager_login',value:'1'});
                             console.log("已允许所有用户登录");
-                            this.getSystemSetting();
+                            setTimeout(()=>{
+                                this.getSystemSetting();
+                            }, 1000);
                         })
                         .catch(()=>{
                             console.log("取消操作");
@@ -75,27 +98,86 @@
             },
             //禁止/允许学生登录
             changeStudentLogin(e){
-                if (e === true) {
-                    ElMessageBox.confirm("此修改将会禁止所有学生用户登录，请再次确认是否开启", "警告", {type: 'warning'})
+                if (e === false) {
+                    ElMessageBox.confirm("此修改将会禁止所有学生用户登录，请再次确认是否修改", "警告", {type: 'warning'})
                         .then(() => {
+                            this.updateSetting({setting:'stu_login',value:'0'});
                             console.log("已禁止所有学生用户登录");
-                            this.getSystemSetting();
+                            setTimeout(()=>{
+                                this.getSystemSetting();
+                            }, 1000);
                         })
                         .catch(()=>{
                             console.log("取消操作");
                             this.getSystemSetting();
                         })
                 }else {
-                    ElMessageBox.confirm("此修改将会允许所有学生用户登录，请再次确认是否关闭", "警告", {type: 'warning'})
+                    ElMessageBox.confirm("此修改将会允许所有学生用户登录，请再次确认是否做修改", "警告", {type: 'warning'})
                         .then(() => {
+                            this.updateSetting({setting:'stu_login',value:'1'});
                             console.log("已允许所有学生用户登录");
-                            this.getSystemSetting();
+                            setTimeout(()=>{
+                                this.getSystemSetting();
+                            }, 1000);
                         })
                         .catch(()=>{
                             console.log("取消操作");
                             this.getSystemSetting();
                         })
                 }
+            },
+            //允许/禁止三方用户登录
+            changeThirdLogin(e){
+                if (e === false) {
+                    ElMessageBox.confirm("此修改将会禁止三方用户登录，请再次确认是否修改", "警告", {type: 'warning'})
+                        .then(() => {
+                            this.updateSetting({setting:'third_party_login',value:'0'});
+                            console.log("已禁止三方用户登录");
+                            setTimeout(()=>{
+                                this.getSystemSetting();
+                            }, 1000);
+                        })
+                        .catch(()=>{
+                            console.log("取消操作");
+                            this.getSystemSetting();
+                        })
+                }else {
+                    ElMessageBox.confirm("此修改将会允许三方用户登录，请再次确认是否做修改", "警告", {type: 'warning'})
+                        .then(() => {
+                            this.updateSetting({setting:'third_party_login',value:'1'});
+                            console.log("已允许三方用户登录");
+                            setTimeout(()=>{
+                                this.getSystemSetting();
+                            }, 1000);
+                        })
+                        .catch(()=>{
+                            console.log("取消操作");
+                            this.getSystemSetting();
+                        })
+                }
+            },
+
+            //更新
+            updateSetting(set){
+                axios.post('http://localhost:8762/common/updateSetting',{
+                    setting: set.setting,
+                    value: set.value
+                },{
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if (res.data.code !== 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            this.$router.push("/login");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        ElMessage.success(res.data.message);
+                    }
+                });
             }
         }
 
