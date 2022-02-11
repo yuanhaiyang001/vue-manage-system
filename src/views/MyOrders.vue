@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 寝室管理
+                    <i class="el-icon-lx-cascades"></i> 我的订单
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -120,12 +120,12 @@
 </template>
 
 <script>
-    import {ref, reactive} from "vue";
     import {ElMessage, ElMessageBox} from "element-plus";
     import axios from "axios";
+    import {reactive, ref} from "vue";
 
     export default {
-        name: "dorManage",
+        name: "MyOrders",
         data() {
             return {
                 colleges: null,
@@ -382,8 +382,7 @@
 
 
         },
-    };
-
+    }
 </script>
 
 <style scoped>

@@ -86,9 +86,20 @@ export default {
             },
             {
                 icon: "el-icon-service",
-                index: "/myService",
-                title: "我的服务",
-
+                index: "myService",
+                title: "三方服务",
+                subs:[
+                    {
+                        icon: "el-icon-service",
+                        index: "myService",
+                        title: "我的服务",
+                    },
+                    {
+                        icon: "el-icon-service",
+                        index: "/myOrders",
+                        title: "我的订单",
+                    },
+                ]
             },
             {
                 icon: "el-icon-message",
@@ -98,7 +109,7 @@ export default {
             },
             {
                 icon: "el-icon-lx-settings",
-                index: "/sysSetting",
+                index:'sysSetting',
                 title: "系统设置",
                 subs:[
                     {
