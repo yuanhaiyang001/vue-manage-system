@@ -24,7 +24,7 @@
                         <el-input type="textarea" rows="4" v-model="dictData.describe"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">提交</el-button>
+                        <el-button type="primary" @click="  onSubmit">提交</el-button>
                         <el-button @click="onReset">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -76,6 +76,8 @@
                 this.submitForm('formRef');
                 if (this.valid === true){
                     console.log(this.dictData)
+                }else {
+                    return;
                 }
                 axios.post('http://localhost:8762/common/saveDict',{
                     code: this.dictData.code,

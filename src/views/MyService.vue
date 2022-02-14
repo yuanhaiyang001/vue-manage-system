@@ -27,6 +27,9 @@
                 <el-button style="position: relative; bottom: 7px" type="primary" icon="el-icon-search"
                            @click="resetTableData" class="reset">重置
                 </el-button>
+                <div>
+                    <el-button type="text" icon="el-icon-lx-add" class="red insert" @click="addVisible = true">添加服务</el-button>
+                </div>
             </div>
             <el-table :data="list" v-loading="isLoading" class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
@@ -59,7 +62,7 @@
                             编辑
                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
-                                   @click="deleteDor(scope.row.dorNo)">删除
+                                   @click="delService(scope.row.id)">删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -85,14 +88,14 @@
                 <el-form-item label="名称：">
                     <el-input v-model="editInfo.serviceName" style="width: 70%"></el-input>
                 </el-form-item>
-                <el-form-item label="描述：">
-                    <el-input v-model="editInfo.serviceDescribe" style="width: 70%"></el-input>
-                </el-form-item>
                 <el-form-item label="单价：">
                     <el-input v-model="editInfo.unitPrice" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="库存：">
                     <el-input v-model="editInfo.stock" style="width: 70%"></el-input>
+                </el-form-item>
+                <el-form-item label="描述：">
+                    <el-input  type="textarea" rows="4" v-model="editInfo.serviceDescribe" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-radio-group v-model="TStatus">
@@ -108,6 +111,29 @@
                 </span>
             </template>
         </el-dialog>
+        <!-- 添加弹出框 -->
+        <el-dialog title="添加" v-model="addVisible" width="25%">
+            <el-form label-width="27%" :model="serviceAddInfo" :rules="rules" ref="formRef">
+                <el-form-item label="名称：" prop="serviceName">
+                    <el-input v-model="serviceAddInfo.serviceName" style="width: 70%"></el-input>
+                </el-form-item>
+                <el-form-item label="单价：" prop="unitPrice">
+                    <el-input oninput ="value=value.replace(/[^0-9.]/g,'')" v-model="serviceAddInfo.unitPrice" style="width: 70%"></el-input>
+                </el-form-item>
+                <el-form-item label="库存：" prop="stock">
+                    <el-input oninput ="value=value.replace(/[^\d]/g,'')" v-model="serviceAddInfo.stock" style="width: 70%"></el-input>
+                </el-form-item>
+                <el-form-item label="描述：" clearable>
+                    <el-input  type="textarea" rows="4" v-model="serviceAddInfo.serviceDescribe" style="width: 70%"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="addVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addService">确 定</el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -120,9 +146,30 @@
         name: "MyService",
         data() {
             return {
+                valid: false,
+                rules: {
+                    serviceName: [
+                        {required: true, message: '请输入服务名称', trigger: 'blur'},
+                        {min: 1, message: '长度最短为1个字符', trigger: 'blur'}
+                    ],
+                    unitPrice: [
+                        {required: true, message: '请输入单价', trigger: 'blur'},
+                    ],
+                    stock: [
+                        {required: true, message: '请输入库存', trigger: 'blur'},
+                        {max: 4, message: '最多为9999', trigger: 'blur'}
+                    ]
+                },
+                addVisible:false,
+                serviceAddInfo: {
+                    serviceName: '',
+                    serviceDescribe: '',
+                    unitPrice: '',
+                    stock: '',
+                },
                 //临时变量
                 TStatus: null,
-                //寝室查询参数
+                //查询参数
                 query: reactive({
                     serviceNum: '',
                     serviceName: '',
@@ -160,12 +207,14 @@
                     serviceStatus: this.query.serviceStatus === '99' ? null : this.query.serviceStatus,
                     serviceName: this.query.serviceName,
                     serviceNum: this.query.serviceNum,
+                    pageNo: this.query.pageNo,
+                    pageSize: this.query.pageSize,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    console.log(res.data)
+                    console.log(res.data);
                     if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
@@ -343,11 +392,86 @@
                 });
                 this.editVisible = false;
             },
+
+            addCheck(formName) {
+                this.$refs[formName].validate((valid) => {
+                    this.valid = valid;
+                });
+            },
+
+            //添加服务
+            addService() {
+                this.addCheck('formRef');
+                if (this.valid === true){
+                    console.log(this.dictData)
+                }else{
+                    return;
+                }
+                axios.post('http://localhost:8762/thirdparty/service/insert',{
+                    serviceName: this.serviceAddInfo.serviceName,
+                    serviceDescribe: this.serviceAddInfo.serviceDescribe,
+                    unitPrice: this.serviceAddInfo.unitPrice,
+                    stock: this.serviceAddInfo.stock,
+                },{
+                    headers: {
+                        authorization: localStorage.getItem("token")
+                    }
+                }).then(res =>{
+                    if (res.data.code !== 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            this.$router.push("/login");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    } else {
+                        this.addVisible = false;
+                        // this.serviceAddInfo.serviceName = '';
+                        // this.serviceAddInfo.serviceDescribe = '';
+                        // this.serviceAddInfo.unitPrice = '';
+                        // this.serviceAddInfo.stock = '';
+                        this.getTableData();
+                        ElMessage.success(res.data.message);
+                    }
+                });
+            },
+            //删除服务
+            delService(id) {
+                // 二次确认删除
+                ElMessageBox.confirm("确定要删除吗？", "提示", {
+                    type: "warning",
+                }).then(() =>{
+                    axios.post('http://localhost:8762/thirdparty/service/delete',{
+                        id: id,
+                    },{
+                        headers: {
+                            authorization: localStorage.getItem("token")
+                        }
+                    }).then(res =>{
+                        if (res.data.code !== 1000) {
+                            if (res.data.code === 999) {
+                                ElMessage.error(res.data.message);
+                                this.$router.push("/login");
+                            }
+                            ElMessage.error(res.data.message);
+                            return false;
+                        } else {
+                            this.getTableData();
+                            ElMessage.success(res.data.message);
+                        }
+                    })
+                }).catch((error) => {
+                    ElMessageBox.alert("删除失败" + error)
+                });
+            },
         },
     }
 </script>
 
 <style scoped>
+    .insert {
+        margin-left: 200%;
+    }
     .handle-box {
         display: flex;
         margin-bottom: 20px;
