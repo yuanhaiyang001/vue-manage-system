@@ -24,7 +24,7 @@
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件，且不超过500kb</div>
                     </el-upload>
-                    <el-button style="margin-left: 10px;" size="small" type="success" @click="preView">查看预览数据
+                    <el-button style="margin-left: 100px;" size="small" type="success" @click="preView">查看预览数据
                     </el-button>
                     <el-button style="margin-left: 50px;" size="small" type="success" @click="handleUpload">确认上传
                     </el-button>

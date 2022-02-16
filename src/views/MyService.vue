@@ -470,7 +470,7 @@
 
 <style scoped>
     .insert {
-        margin-left: 200%;
+        margin-left: 100%;
     }
     .handle-box {
         display: flex;
