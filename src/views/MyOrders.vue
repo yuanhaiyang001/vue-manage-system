@@ -98,7 +98,7 @@
                     <el-steps :active="detailsInfo.orderStatus === '1'?detailsInfo.orderStatus-1:detailsInfo.orderStatus" finish-status="success">
                         <el-step
                                 :title="detailsInfo.orderStatus === '0'?'待发货':detailsInfo.orderStatus === '1'?'待发货':'已发货'"
-                                :description="`付款时间：`+detailsInfo.createTime"></el-step>
+                                :description="`付款时间：`+detailsInfo.payTime"></el-step>
                         <el-step title="服务中"
                                  :description="`发货时间：`+(detailsInfo.sendTime===null?'':detailsInfo.sendTime)"></el-step>
                         <el-step title="已完成"
@@ -147,6 +147,7 @@
                     amount: "",
                     totalPrice: "",
                     orderStatus: "",
+                    payTime: "",
                     sendTime: "",
                     completeTime: "",
                     remark: "",

@@ -15,7 +15,7 @@
                                 <i class="el-icon-lx-camerafill"></i>
                             </span>
                         </div>
-                        <div class="info-name">{{ name }}</div>
+                        <div class="info-name">{{ form.realName }}</div>
                         <div class="info-desc">{{form.remark}}</div>
                     </div>
                 </el-card>
@@ -85,15 +85,15 @@
             const router = useRouter();
 
             const form = reactive({
-                id: JSON.parse(sessionStorage.getItem("id")),
-                stuNo: JSON.parse(sessionStorage.getItem("myInfo")).userNo,
+                id: JSON.parse(sessionStorage.getItem("myInfo")).id,
+                stuNo: localStorage.getItem("ms_username"),
                 realName: JSON.parse(sessionStorage.getItem("myInfo")).realName,
                 college: JSON.parse(sessionStorage.getItem("myInfo")).college,
                 discipline: JSON.parse(sessionStorage.getItem("myInfo")).discipline,
                 userName: JSON.parse(sessionStorage.getItem("myInfo")).userName,
                 phone: JSON.parse(sessionStorage.getItem("myInfo")).phone,
                 email: JSON.parse(sessionStorage.getItem("myInfo")).email,
-                remark: "不可能！我的代码怎么可能会有bug！",
+                remark: JSON.parse(sessionStorage.getItem("myInfo")).remark,
             });
             const onSubmit = () => {
                 console.log(JSON.stringify(form));
@@ -101,7 +101,7 @@
                     userName: form.userName,
                     phone: form.phone,
                     email: form.email,
-                    remark: "不可能！我的代码怎么可能会有bug！",
+                    remark: form.remark,
                 }, {
                     headers: {
                         authorization: localStorage.getItem("token")
