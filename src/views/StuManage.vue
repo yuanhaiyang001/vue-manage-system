@@ -391,7 +391,7 @@
     }
 
     .handle-input {
-        width: 15%;
+        width: 14%;
         display: inline-block;
     }
 
