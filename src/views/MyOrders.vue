@@ -16,9 +16,11 @@
                 <span style="position: relative; bottom: 7px">状态：</span>
                 <el-select v-model="query.orderStatus" placeholder="请选择状态" class="handle-select mr10">
                     <el-option key="99" label="全部" value="99"></el-option>
-                    <el-option key="0" label="待发货" value="1"></el-option>
-                    <el-option key="1" label="服务中" value="2"></el-option>
-                    <el-option key="2" label="已完成" value="3"></el-option>
+                    <el-option key="0" label="待付款" value="0"></el-option>
+                    <el-option key="1" label="待发货" value="1"></el-option>
+                    <el-option key="2" label="服务中" value="2"></el-option>
+                    <el-option key="3" label="已完成" value="3"></el-option>
+                    <el-option key="4" label="已取消" value="4"></el-option>
                 </el-select>
 
                 <el-button style="position: relative; bottom: 7px" type="primary" icon="el-icon-search"
@@ -39,11 +41,13 @@
                 <el-table-column width="100%" prop="orderStatus" label="状态" align="center">
                     <template #default="scope">
                         <el-tag :type="
-                                scope.row.orderStatus === '1'
+                                scope.row.orderStatus === '0' || scope.row.orderStatus === '1'||
+                                scope.row.orderStatus === '4'
                                     ? 'info'
                                     : scope.row.orderStatus === '3' ? 'success' : ''
-                            ">{{ scope.row.orderStatus === '1' ? "待发货" : scope.row.orderStatus === '2' ? "服务中" :
-                            "已完成"}}
+                            ">{{ scope.row.orderStatus === '0' ? "待付款" : scope.row.orderStatus === '1' ? "待发货" :
+                            scope.row.orderStatus === '2'? "服务中":scope.row.orderStatus === '3'?"已完成":
+                            scope.row.orderStatus === '4'?"已取消":"异常"}}
                         </el-tag>
                     </template>
                 </el-table-column>
@@ -97,8 +101,8 @@
                 <el-form-item label="状态：">
                     <el-steps :active="detailsInfo.orderStatus === '1'?detailsInfo.orderStatus-1:detailsInfo.orderStatus" finish-status="success">
                         <el-step
-                                :title="detailsInfo.orderStatus === '0'?'待发货':detailsInfo.orderStatus === '1'?'待发货':'已发货'"
-                                :description="`付款时间：`+detailsInfo.payTime"></el-step>
+                                :title="detailsInfo.orderStatus === '0'?'待付款':detailsInfo.orderStatus === '1'?'待发货':detailsInfo.orderStatus === '4'?'用户取消':'已发货'"
+                                :description="`付款时间：`+(detailsInfo.payTime===null?'':detailsInfo.payTime)"></el-step>
                         <el-step title="服务中"
                                  :description="`发货时间：`+(detailsInfo.sendTime===null?'':detailsInfo.sendTime)"></el-step>
                         <el-step title="已完成"
