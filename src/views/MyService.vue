@@ -89,10 +89,10 @@
                     <el-input v-model="editInfo.serviceName" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="单价：">
-                    <el-input v-model="editInfo.unitPrice" style="width: 70%"></el-input>
+                    <el-input oninput ="value=value.replace(/[^0-9.]/g,'')" v-model="editInfo.unitPrice" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="库存：">
-                    <el-input v-model="editInfo.stock" style="width: 70%"></el-input>
+                    <el-input oninput ="value=value.replace(/[^\d]/g,'')" v-model="editInfo.stock" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="描述：">
                     <el-input  type="textarea" rows="4" v-model="editInfo.serviceDescribe" style="width: 70%"></el-input>
