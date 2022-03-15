@@ -9,7 +9,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-select style="margin-left: 100px" v-model="query.expiredFlag" placeholder="过期状态"
+                状态：
+                <el-select  v-model="query.expiredFlag" placeholder="过期状态"
                            class="handle-select mr10">
                     <el-option key="2" label="全部" value="2"></el-option>
                     <el-option key="1" label="未过期" value="0"></el-option>
@@ -22,7 +23,10 @@
                 摘要：
                 <el-input v-model="query.summary" placeholder="请输入摘要" class="handle-input mr10"></el-input>
                 <br>
-                <div style="margin-left: 100px;margin-right: 200px">发布时间：
+                <div>
+                    内容：
+                    <el-input v-model="query.annContent" placeholder="请输入内容" class="handle-input mr10"></el-input>
+                    发布时间：
                     <el-date-picker
                             v-model="queryExpiredTime"
                             value-format="YYYY-MM-DD"
@@ -41,12 +45,13 @@
             <el-table :data="list" v-loading="isLoading" class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55"></el-table-column>
-                <el-table-column width="170%" prop="annNo" label="公告编号"></el-table-column>
-                <el-table-column width="200%" prop="annTitle" label="公告标题"></el-table-column>
-                <el-table-column width="280%" prop="annContent" label="内容"></el-table-column>
-                <el-table-column width="170%" prop="createTime" label="发布时间"></el-table-column>
-                <el-table-column width="170%" prop="expiredTime" label="过期时间"></el-table-column>
-                <el-table-column width="100%" prop="serviceStatus" label="状态" align="center">
+                <el-table-column width="150px" prop="annNo" label="公告编号"></el-table-column>
+                <el-table-column width="150px" prop="annTitle" label="公告标题"></el-table-column>
+                <el-table-column prop="summary" label="摘要"></el-table-column>
+                <el-table-column prop="annContent" label="内容"></el-table-column>
+                <el-table-column width="160px" prop="createTime" label="发布时间"></el-table-column>
+                <el-table-column width="100px" prop="expiredTime" label="过期时间"></el-table-column>
+                <el-table-column width="100px" prop="serviceStatus" label="状态" align="center">
                     <template #default="scope">
                         <el-tag :type="
                                 scope.row.expiredFlag === '0'
@@ -78,7 +83,7 @@
             </div>
         </div>
         <!-- 添加弹出框 -->
-        <el-dialog title="添加" v-model="addVisible" width="30%">
+        <el-dialog title="发布公告" v-model="addVisible" width="30%">
             <el-form label-width="30%" :model="ann" :rules="rules" ref="formRef">
                 <el-form-item label="标题：" prop="annTitle">
                     <el-input v-model="ann.annTitle" style="width: 70%"></el-input>
@@ -130,12 +135,12 @@
                     ],
                     summary: [
                         {required: true, message: '请输入摘要', trigger: 'blur'},
-                        {min: 10, message: '长度最短为10个字符', trigger: 'blur'},
+                        {min: 5, message: '长度最短为5个字符', trigger: 'blur'},
                         {max: 50, message: '长度最长为50个字符', trigger: 'blur'}
                     ],
                     annContent: [
                         {required: true, message: '请输入内容', trigger: 'blur'},
-                        {min: 20, message: '长度最短为20个字符', trigger: 'blur'},
+                        {min: 10, message: '长度最短为10个字符', trigger: 'blur'},
                         {max: 100, message: '长度最长为100个字符', trigger: 'blur'}
                     ]
                 },
@@ -146,6 +151,7 @@
                     annNo: "",
                     annTitle: "",
                     summary: "",
+                    annContent:"",
                     createTimeStart: "",
                     createTimeEnd: "",
                     expiredFlag: "",
@@ -175,7 +181,8 @@
                     annNo: this.query.annNo,
                     annTitle: this.query.annTitle,
                     summary: this.query.summary,
-                    expiredFlag: this.query.expiredFlag === '2' ? null : this.query.expiredFlag,
+                    annContent: this.query.annContent,
+                    expiredFlag: this.query.expiredFlag === '1' ? '1' : this.query.expiredFlag === '0' ? '0': null,
                     createTimeStart: this.queryExpiredTime[0],
                     createTimeEnd: this.queryExpiredTime[1],
                     pageNo: this.query.pageNo,
@@ -239,7 +246,7 @@
                 this.getTableData();
             },
 
-            //删除寝室信息
+            //删除公告
             delAnn(id) {
                 // 二次确认删除
                 ElMessageBox.confirm("确定要删除吗？", "提示", {
@@ -322,6 +329,7 @@
     .handle-box {
         /*display: flex;*/
         margin-bottom: 20px;
+        margin-left: 50px;
         /*justify-content: center;*/
         /*align-items: center;*/
     }
@@ -331,7 +339,7 @@
     }
 
     .handle-input {
-        width: 15%;
+        width: 20%;
         display: inline-block;
     }
 
@@ -350,6 +358,7 @@
     }
 
     .reset {
-        margin-left: 58px;
+        margin-left: 30px;
+        margin-right: 40px;
     }
 </style>

@@ -38,7 +38,7 @@
             return {
                 param: reactive({
                     username: "201810414427",
-                    password: "000000",
+                    password: "00000000",
                 }),
                 rules: {
                     username: [
