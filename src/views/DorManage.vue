@@ -301,7 +301,6 @@
                     this.getTableData();
                 })
                     .catch((error) => {
-                        ElMessageBox.alert("删除失败" + error)
                     });
             },
 

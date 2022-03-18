@@ -34,11 +34,11 @@
             <el-table :data="list" v-loading="isLoading" class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55"></el-table-column>
-                <el-table-column width="200%" prop="serviceNum" label="服务编号"></el-table-column>
-                <el-table-column width="200%" prop="serviceName" label="服务名称"></el-table-column>
+                <el-table-column  prop="serviceNum" label="服务编号"></el-table-column>
+                <el-table-column  prop="serviceName" label="服务名称"></el-table-column>
                 <el-table-column width="100%" prop="unitPrice" label="单价"></el-table-column>
-                <el-table-column width="100%" prop="stock" label="库存"></el-table-column>
-                <el-table-column prop="serviceDescribe" label="描述"></el-table-column>
+                <el-table-column width="70%"  prop="stock" label="库存"></el-table-column>
+<!--                <el-table-column prop="serviceDescribe" label="描述"></el-table-column>-->
                 <el-table-column width="170%" prop="publishTime" label="发布时间"></el-table-column>
                 <el-table-column width="170%" prop="takeDownTime" label="下架时间"></el-table-column>
                 <el-table-column width="100%" prop="serviceStatus" label="状态" align="center">
@@ -112,8 +112,19 @@
             </template>
         </el-dialog>
         <!-- 添加弹出框 -->
-        <el-dialog title="添加" v-model="addVisible" width="25%">
+        <el-dialog title="添加" v-model="addVisible" width="26%">
             <el-form label-width="27%" :model="serviceAddInfo" :rules="rules" ref="formRef">
+                <el-form-item style="margin-bottom: 0px" label="图片：" prop="image">
+                </el-form-item>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://www.hiyang.top:8766/common/upload"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                 <el-form-item label="名称：" prop="serviceName">
                     <el-input v-model="serviceAddInfo.serviceName" style="width: 70%"></el-input>
                 </el-form-item>
@@ -146,6 +157,7 @@
         name: "MyService",
         data() {
             return {
+                imageUrl:"",
                 valid: false,
                 rules: {
                     serviceName: [
@@ -162,6 +174,7 @@
                 },
                 addVisible:false,
                 serviceAddInfo: {
+                    image: '',
                     serviceName: '',
                     serviceDescribe: '',
                     unitPrice: '',
@@ -199,6 +212,28 @@
             this.getTableData();
         },
         methods: {
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+                console.log(res);
+                if (res.code !== 1000){
+                    ElMessage.error(res.message);
+                }else{
+                    this.serviceAddInfo.image = res.data;
+                }
+                console.log(this.serviceAddInfo.image)
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg' || 'image/jpg' || 'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            },
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
@@ -408,6 +443,7 @@
                     return;
                 }
                 axios.post('http://localhost:8762/thirdparty/service/insert',{
+                    image: this.serviceAddInfo.image,
                     serviceName: this.serviceAddInfo.serviceName,
                     serviceDescribe: this.serviceAddInfo.serviceDescribe,
                     unitPrice: this.serviceAddInfo.unitPrice,
@@ -461,7 +497,6 @@
                         }
                     })
                 }).catch((error) => {
-                    ElMessageBox.alert("删除失败" + error)
                 });
             },
         },
@@ -504,5 +539,22 @@
 
     .reset {
         margin-left: 58px;
+    }
+    .avatar-uploader  {
+        /*position: relative;*/
+        /*width: 70px;*/
+        /*height: 100px;*/
+        margin-bottom: 10px;
+    }
+    .avatar-uploader :hover {
+    }
+    .avatar-uploader-icon {
+        font-size: xx-large;
+        line-height: 178px;
+    }
+    .avatar {
+        width: 100%;
+        height: 100%;
+        display: block;
     }
 </style>
