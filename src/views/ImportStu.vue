@@ -17,8 +17,6 @@
                             :headers="uploadHeaders"
                             :on-success="uploadRes"
                             accept=".xls, .xlsx"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
                             :file-list="fileList"
                             :auto-upload="false">
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -105,13 +103,26 @@
             //上传返回的数据
             uploadRes(res) {
                 console.log(res);
-                if (this.action === '0'){
-                    this.list = res.data;
-                    ElMessage.success(res.message);
+                if (res.code !== 1000) {
+                    if (res.code === 999) {
+                        ElMessage.error(res.message);
+                        this.$router.push("/login");
+                    }else if(res.code === 403){
+                        ElMessage.error(res.message);
+                        this.$router.replace("/403");
+                    }
+                    ElMessage.error(res.message);
+                    return false;
                 }else {
-                    ElMessage.success("上传成功");
+                    console.log(res);
+                    if (this.action === '0'){
+                        this.list = res.data;
+                        ElMessage.success(res.message);
+                    }else {
+                        ElMessage.success("上传成功");
+                    }
+                    this.isLoading = false;
                 }
-                this.isLoading = false;
             },
             handleUpload() {
                 this.action = '1';

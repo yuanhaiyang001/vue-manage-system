@@ -56,9 +56,22 @@
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
+                    if (res.data.code !== 1000) {
+                        if (res.data.code === 999) {
+                            ElMessage.error(res.data.message);
+                            this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
+                        }
+                        ElMessage.error(res.data.message);
+                        return false;
+                    }else {
+                        this.systemSetting.allowDorManagerLogin = res.data.data[0].value === '1' ? true:false;
+                        this.systemSetting.allowStudentLogin = res.data.data[1].value === '1' ? true:false;
+                        this.systemSetting.allowThirdPartyLogin = res.data.data[2].value === '1' ? true:false;
+                    }
                     console.log(res.data.data);
-                    this.systemSetting.allowDorManagerLogin = res.data.data[0].value === '1' ? true:false;
-                    this.systemSetting.allowStudentLogin = res.data.data[1].value === '1' ? true:false;
                 });
                 setTimeout(()=>{
                     this.isLoading = false;
@@ -171,6 +184,9 @@
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
                             this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
                         }
                         ElMessage.error(res.data.message);
                         return false;

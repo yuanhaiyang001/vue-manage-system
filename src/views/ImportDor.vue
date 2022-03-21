@@ -100,14 +100,26 @@
             },
             //上传返回的数据
             uploadRes(res) {
-                console.log(res);
-                if (this.action === '0'){
-                    this.list = res.data;
-                    ElMessage.success(res.message);
-                }else {
-                    ElMessage.success("上传成功");
+                if (res.code !== 1000) {
+                    if (res.code === 999) {
+                        ElMessage.error(res.message);
+                        this.$router.push("/login");
+                    }else if(res.code === 403){
+                        ElMessage.error(res.message);
+                        this.$router.replace("/403");
+                    }
+                    ElMessage.error(res.message);
+                    return false;
+                } else {
+                    console.log(res);
+                    if (this.action === '0'){
+                        this.list = res.data;
+                        ElMessage.success(res.message);
+                    }else {
+                        ElMessage.success("上传成功");
+                    }
+                    this.isLoading = false;
                 }
-                this.isLoading = false;
             },
             handleUpload() {
                 this.action = '1';

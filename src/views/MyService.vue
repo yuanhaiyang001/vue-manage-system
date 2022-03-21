@@ -254,6 +254,9 @@
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
                             this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -316,6 +319,9 @@
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
                             this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -348,6 +354,9 @@
                             if (res.data.code === 999) {
                                 ElMessage.error(res.data.message);
                                 this.$router.push("/login");
+                            }else if(res.data.code === 403){
+                                ElMessage.error(res.data.message);
+                                this.$router.replace("/403");
                             }
                             ElMessage.error(res.data.message);
                             return false;
@@ -392,7 +401,7 @@
                 }
                 console.log(this.editInfo);
                 if (this.editInfo.serviceName === null || this.editInfo.serviceName === "") {
-                    ElMessage.error("请填写必填参数")
+                    ElMessage.error("请填写必填参数");
                     return false;
                 }
                 if (this.editInfo.stock === null){
@@ -417,6 +426,9 @@
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
                             this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -457,6 +469,9 @@
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
                             this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
                         }
                         ElMessage.error(res.data.message);
                         return false;
@@ -488,6 +503,9 @@
                             if (res.data.code === 999) {
                                 ElMessage.error(res.data.message);
                                 this.$router.push("/login");
+                            }else if(res.data.code === 403){
+                                ElMessage.error(res.data.message);
+                                this.$router.replace("/403");
                             }
                             ElMessage.error(res.data.message);
                             return false;

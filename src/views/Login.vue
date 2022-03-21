@@ -37,8 +37,8 @@
         data() {
             return {
                 param: reactive({
-                    username: "201810414427",
-                    password: "00000000",
+                    username: "",
+                    password: "",
                 }),
                 rules: {
                     username: [
@@ -124,7 +124,7 @@
                       authorization: localStorage.getItem("token")
                   }
               }).then(res=> {
-                  console.log(res.data.data);
+                  // console.log(res.data.data);
                   sessionStorage.setItem("dicts", JSON.stringify(res.data.data));
               })
             },

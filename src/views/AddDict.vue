@@ -94,6 +94,9 @@
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);
                             this.$router.push("/login");
+                        }else if(res.data.code === 403){
+                            ElMessage.error(res.data.message);
+                            this.$router.replace("/403");
                         }
                         ElMessage.error(res.data.message);
                         return false;
