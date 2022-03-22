@@ -24,7 +24,7 @@
                 <el-card shadow="hover">
                     <template #header>
                         <div class="clearfix">
-                            <span>账户编辑</span>
+                            <span>账户编辑<p style="font-size: small;color: #97a8be">（更新后重新登录系统生效）</p></span>
                         </div>
                     </template>
                     <el-form label-width="200px">
@@ -211,7 +211,7 @@
                         ElMessage.error(res.data.message);
                         return false;
                     }else{
-                        sessionStorage.setItem("myInfo", JSON.stringify(form));
+                        // sessionStorage.setItem("myInfo", JSON.stringify(form));
                         ElMessage.success(res.data.message)
                     }
                 })

@@ -4,14 +4,14 @@
             <div class="ms-title">后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="loginValid" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                    <el-input v-model="param.username" placeholder="请输入职工号">
                         <template #prepend>
                             <el-button icon="el-icon-user"></el-button>
                         </template>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" placeholder="password" v-model="param.password"
+                    <el-input type="password" placeholder="请输入密码" v-model="param.password"
                               @keyup.enter="login">
                         <template #prepend>
                             <el-button icon="el-icon-lock"></el-button>

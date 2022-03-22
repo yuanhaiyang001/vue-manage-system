@@ -51,7 +51,7 @@
                 },
                 {
                     icon: "el-icon-lx-friend",
-                    index: "stuManage",
+                    index: "/stuManage",
                     title: "学生管理",
                     subs: [
                         {
@@ -71,11 +71,10 @@
                 },
                 {
                     icon: "el-icon-lx-home",
-                    index: "dorManage",
+                    index: "/dorManage",
                     title: "寝室管理",
                     subs: [
                         {
-                            icon: "el-icon-lx-sort",
                             index: "/dorManage",
                             title: "寝室列表",
 

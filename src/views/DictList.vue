@@ -118,8 +118,9 @@
             }
         },
         mounted() {
-            this.getDictTypes();
             this.getTableData();
+            this.getDictTypes();
+
         },
         methods: {
             //获取类型

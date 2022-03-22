@@ -149,9 +149,10 @@
             }
         },
         mounted() {
+            this.getTableData();
             this.getColleges();
             this.getDiscipline();
-            this.getTableData();
+
         },
         methods: {
             //获取学院
