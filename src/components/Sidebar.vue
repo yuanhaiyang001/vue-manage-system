@@ -51,7 +51,7 @@
                 },
                 {
                     icon: "el-icon-lx-friend",
-                    index: "/stuManage",
+                    index: "stuManage",
                     title: "学生管理",
                     subs: [
                         {
@@ -96,7 +96,7 @@
                     subs: [
                         {
                             icon: "el-icon-service",
-                            index: "myService",
+                            index: "/myService",
                             title: "我的服务",
                         },
                         {

@@ -234,7 +234,7 @@
 
             //获取各状态信息数量
             getAppealSum() {
-                axios.post('http://localhost:8762/admin/appealManage/sum', {}, {
+                axios.post('http://www.hiyang.top:8762/admin/appealManage/sum', {}, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
@@ -260,7 +260,7 @@
 
             //获取列表数据
             getListData() {
-                axios.post('http://localhost:8762/admin/appealManage/list', {
+                axios.post('http://www.hiyang.top:8762/admin/appealManage/list', {
                     appealStatus: "0",
                     pageNo: this.waitHandleQuery.pageNo,
                     pageSize: this.waitHandleQuery.pageSize,
@@ -289,7 +289,7 @@
                     }
                 });
 
-                axios.post('http://localhost:8762/admin/appealManage/list', {
+                axios.post('http://www.hiyang.top:8762/admin/appealManage/list', {
                     appealStatus: "1",
                     pageNo: this.handledQuery.pageNo,
                     pageSize: this.handledQuery.pageSize,
@@ -318,7 +318,7 @@
                     }
                 });
 
-                axios.post('http://localhost:8762/admin/appealManage/list', {
+                axios.post('http://www.hiyang.top:8762/admin/appealManage/list', {
                     appealStatus: "2",
                     pageNo: this.revokedQuery.pageNo,
                     pageSize: this.revokedQuery.pageSize,
@@ -365,7 +365,7 @@
             //审核
             doAudit(appealNo, auditStatus) {
                 console.log(appealNo + "审核" + auditStatus === '1' ? "通过" : "驳回");
-                axios.post('http://localhost:8762/admin/appealManage/doAudit', {
+                axios.post('http://www.hiyang.top:8762/admin/appealManage/doAudit', {
                     appealNo: appealNo,
                     auditStatus: auditStatus,
                 }, {

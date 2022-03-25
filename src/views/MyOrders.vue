@@ -166,7 +166,7 @@
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
-                axios.post('http://localhost:8762/thirdparty/order/list', {
+                axios.post('http://www.hiyang.top:8762/thirdparty/order/list', {
                     orderNum: this.query.orderNum,
                     serviceName: this.query.serviceName,
                     orderStatus: this.query.orderStatus === '99' ? null : this.query.orderStatus,
@@ -235,7 +235,7 @@
 
             //详情
             orderDetails(id) {
-                axios.post('http://localhost:8762/thirdparty/order/details', {
+                axios.post('http://www.hiyang.top:8762/thirdparty/order/details', {
                     id: id,
                 }, {
                     headers: {
@@ -263,7 +263,7 @@
             //发货
             endService(id) {
                 console.log(id + "发货");
-                axios.post('http://localhost:8762/thirdparty/order/update', {
+                axios.post('http://www.hiyang.top:8762/thirdparty/order/update', {
                     id: id,
                     orderStatus: '2'
                 }, {
@@ -271,7 +271,7 @@
                         authorization: localStorage.getItem("token")
                     }
                 }).then(res => {
-                    console.log(res.data)
+                    console.log(res.data);
                     if (res.data.code !== 1000) {
                         if (res.data.code === 999) {
                             ElMessage.error(res.data.message);

@@ -77,7 +77,7 @@
             login() {
                 this.$refs["loginValid"].validate((valid) => {
                     if (valid) {
-                        axios.post('http://localhost:8762/admin/base/login', {
+                        axios.post('http://www.hiyang.top:8762/admin/base/login', {
                             userNo: this.param.username,
                             password: this.param.password,
                         }).then(res => {
@@ -106,7 +106,7 @@
              * 获取个人信息
              */
             getMyInfo() {
-                axios.post('http://localhost:8762/admin/base/myInfo', {}, {
+                axios.post('http://www.hiyang.top:8762/admin/base/myInfo', {}, {
                     headers: {
                         authorization: localStorage.getItem("token")
                     }
@@ -119,7 +119,7 @@
              * 字典
              */
             getAllDicts() {
-              axios.post('http://localhost:8762/common/dicts',{},{
+              axios.post('http://www.hiyang.top:8762/common/dicts',{},{
                   headers: {
                       authorization: localStorage.getItem("token")
                   }

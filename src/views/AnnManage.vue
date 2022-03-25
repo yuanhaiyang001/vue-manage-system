@@ -177,7 +177,7 @@
             getTableData() {
                 // console.log(this.value1[0]);
                 this.isLoading = true;
-                axios.post('http://localhost:8762/admin/annManage/annList', {
+                axios.post('http://www.hiyang.top:8762/admin/annManage/annList', {
                     annNo: this.query.annNo,
                     annTitle: this.query.annTitle,
                     summary: this.query.summary,
@@ -255,7 +255,7 @@
                 ElMessageBox.confirm("确定要删除吗？", "提示", {
                     type: "warning",
                 }).then(() => {
-                    axios.post('http://localhost:8762/admin/annManage/delAnn', {
+                    axios.post('http://www.hiyang.top:8762/admin/annManage/delAnn', {
                         id: id,
                     }, {
                         headers: {
@@ -298,7 +298,7 @@
                 }else{
                     return;
                 }
-                axios.post('http://localhost:8762/admin/annManage/addAnn',{
+                axios.post('http://www.hiyang.top:8762/admin/annManage/addAnn',{
                     annTitle: this.ann.annTitle,
                     summary: this.ann.summary,
                     annContent: this.ann.annContent,

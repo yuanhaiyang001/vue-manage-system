@@ -65,7 +65,7 @@
         data() {
             return {
                 isLoading: false,
-                baseUploadUrl: 'http://localhost:8762/admin/userManage',
+                baseUploadUrl: 'http://www.hiyang.top:8762/admin/userManage',
                 //0预览，1上传
                 action: null,
                 uploadHeaders: {
