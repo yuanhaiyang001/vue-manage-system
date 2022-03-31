@@ -129,10 +129,10 @@
                     <el-input v-model="serviceAddInfo.serviceName" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="单价：" prop="unitPrice">
-                    <el-input oninput ="value=value.replace(/[^0-9.]/g,'')" v-model="serviceAddInfo.unitPrice" style="width: 70%"></el-input>
+                    <el-input oninput ="value=value.replace(/[^0-9.]/g,'')" v-model="serviceAddInfo.unitPrice" @blur="serviceAddInfo.unitPrice = $event.target.value" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="库存：" prop="stock">
-                    <el-input oninput ="value=value.replace(/[^\d]/g,'')" v-model="serviceAddInfo.stock" style="width: 70%"></el-input>
+                    <el-input oninput ="value=value.replace(/[^\d]/g,'')" v-model="serviceAddInfo.stock" @blur="serviceAddInfo.stock = $event.target.value" style="width: 70%"></el-input>
                 </el-form-item>
                 <el-form-item label="描述：" clearable>
                     <el-input  type="textarea" rows="4" v-model="serviceAddInfo.serviceDescribe" style="width: 70%"></el-input>
@@ -227,7 +227,7 @@
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                    this.$message.error('上传图片只能是jpg/jpeg/png格式!');
                 }
                 if (!isLt2M) {
                     this.$message.error('上传图片大小不能超过 2MB!');
@@ -448,6 +448,7 @@
 
             //添加服务
             addService() {
+                console.log(this.serviceAddInfo);
                 this.addCheck('formRef');
                 if (this.valid === true){
                     console.log(this.dictData)

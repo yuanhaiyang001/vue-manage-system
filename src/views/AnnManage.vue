@@ -96,13 +96,13 @@
                     <el-input type="textarea" rows="6" v-model="ann.annContent"
                               style="width: 70%"></el-input>
                 </el-form-item>
-                <el-form-item label="摘要：">
+                <el-form-item label="过期时间：">
                     <el-date-picker
                             ref="datePick"
                             v-model="addExpiredTime"
                             type="date"
                             value-format="YYYY-MM-DD"
-                            placeholder="选择日期">
+                            placeholder="选择过期时间">
                     </el-date-picker>
                 </el-form-item>
             </el-form>
@@ -126,7 +126,7 @@
         data() {
             return {
                 valid: false,
-                addExpiredTime:[],
+                addExpiredTime: null,
                 rules: {
                     annTitle: [
                         {required: true, message: '请输入公告标题', trigger: 'blur'},
@@ -294,6 +294,7 @@
             //发布公告
             addAnn() {
                 this.addCheck('formRef');
+                console.log(this.addExpiredTime)
                 if (this.valid === true){
                 }else{
                     return;

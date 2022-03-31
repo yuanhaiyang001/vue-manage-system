@@ -43,7 +43,7 @@
                 <el-button type="primary" icon="el-icon-search" @click="getTableData" class="reset">搜索</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="resetTableData" class="reset">重置</el-button>
             </div>
-            <el-table :data="list" v-loading="isLoading" class="table" ref="multipleTable"
+            <el-table border="" :data="list" v-loading="isLoading" class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
                 <el-table-column prop="college" label="学院" align="center"></el-table-column>
@@ -53,8 +53,8 @@
                 <el-table-column prop="traceElectricityFee" label="电费余额" align="center"></el-table-column>
                 <el-table-column prop="peopleTotal" label="入住人数" align="center"></el-table-column>
                 <el-table-column prop="stus" label="学生" align="center"></el-table-column>
-                <el-table-column prop="stuNos" label="学号" align="center"></el-table-column>
-                <el-table-column prop="isUse" label="状态" align="center">
+                <el-table-column width="120%" prop="stuNos" label="学号" align="center"></el-table-column>
+                <el-table-column width="140%" prop="isUse" label="状态" align="center">
                     <template #default="scope">
                         <el-tag :type="
                                 scope.row.isUse === '1'
