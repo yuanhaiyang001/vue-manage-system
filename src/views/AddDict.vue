@@ -79,7 +79,7 @@
                 }else {
                     return;
                 }
-                axios.post('http://www.hiyang.top:8762/common/saveDict',{
+                axios.post('https://www.hiyang.top:8762/common/saveDict',{
                     code: this.dictData.code,
                     value: this.dictData.value,
                     type: this.dictData.type,

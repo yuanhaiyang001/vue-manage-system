@@ -287,7 +287,7 @@ export default {
         //用户、服务消息、公告消息数量统计
         getTopData(){
             //用户数量
-            axios.post('http://www.hiyang.top:8762/common/userCount', {
+            axios.post('https://www.hiyang.top:8762/common/userCount', {
             }, {
                 headers: {
                     authorization: localStorage.getItem("token")
@@ -305,7 +305,7 @@ export default {
                 }
             });
             //服务消息
-            axios.post('http://www.hiyang.top:8762/common/serviceInfoCount', {
+            axios.post('https://www.hiyang.top:8762/common/serviceInfoCount', {
             }, {
                 headers: {
                     authorization: localStorage.getItem("token")
@@ -323,7 +323,7 @@ export default {
                 }
             });
             //公告消息
-            axios.post('http://www.hiyang.top:8762/common/annCount', {
+            axios.post('https://www.hiyang.top:8762/common/annCount', {
             }, {
                 headers: {
                     authorization: localStorage.getItem("token")

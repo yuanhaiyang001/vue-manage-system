@@ -131,7 +131,7 @@
         },
         methods:{
             logout(){
-                axios.post('http://www.hiyang.top:8762/admin/base/logout',{
+                axios.post('https://www.hiyang.top:8762/admin/base/logout',{
                 },{
                     headers: {
                         authorization: localStorage.getItem("token")
@@ -153,7 +153,7 @@
                 if (checked === false){
                     return;
                 }
-                axios.post('http://www.hiyang.top:8762/admin/base/updatePassword', {
+                axios.post('https://www.hiyang.top:8762/admin/base/updatePassword', {
                     oldPassword:this.param.oldPassword,
                     newPassword:this.param.newPassword,
                     confirmPassword:this.param.confirmPassword
@@ -192,7 +192,7 @@
             });
             const onSubmit = () => {
                 console.log(JSON.stringify(form));
-                axios.post('http://www.hiyang.top:8762/admin/base/updateMyInfo', {
+                axios.post('https://www.hiyang.top:8762/admin/base/updateMyInfo', {
                     userName: form.userName,
                     phone: form.phone,
                     email: form.email,

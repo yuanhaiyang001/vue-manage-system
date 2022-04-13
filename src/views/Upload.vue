@@ -13,9 +13,9 @@
             <div class="plugins-tips">
                 Element UI自带上传组件。
                 访问地址：
-                <a href="http://element.eleme.io/#/zh-CN/component/upload" target="_blank">Element UI Upload</a>
+                <a href="https://element.eleme.io/#/zh-CN/component/upload" target="_blank">Element UI Upload</a>
             </div>
-            <el-upload class="upload-demo" drag action="http://jsonplaceholder.typicode.com/api/posts/" multiple>
+            <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/api/posts/" multiple>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
                     将文件拖到此处，或

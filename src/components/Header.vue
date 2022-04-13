@@ -63,7 +63,7 @@ export default {
         });
 
         const logout = (username) =>{
-            axios.post('http://www.hiyang.top:8762/admin/base/logout',{
+            axios.post('https://www.hiyang.top:8762/admin/base/logout',{
             },{
                 headers: {
                     authorization: localStorage.getItem("token")

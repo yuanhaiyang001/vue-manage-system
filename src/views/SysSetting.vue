@@ -49,7 +49,7 @@
             //获取系统设置
             getSystemSetting(){
                 this.isLoading = true;
-                axios.post('http://www.hiyang.top:8762/common/querySettings',{
+                axios.post('https://www.hiyang.top:8762/common/querySettings',{
 
                 },{
                     headers: {
@@ -172,7 +172,7 @@
 
             //更新
             updateSetting(set){
-                axios.post('http://www.hiyang.top:8762/common/updateSetting',{
+                axios.post('https://www.hiyang.top:8762/common/updateSetting',{
                     setting: set.setting,
                     value: set.value
                 },{
