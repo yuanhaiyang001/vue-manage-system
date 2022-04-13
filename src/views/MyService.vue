@@ -58,7 +58,7 @@
                         <el-button type="text" icon="el-icon-edit"
                                    @click="handleEdit(scope.row.id, scope.row.serviceNum, scope.row.serviceName,
                                    scope.row.serviceDescribe, scope.row.unitPrice,scope.row.stock,
-                                   scope.row.serviceStatus)">
+                                   scope.row.serviceStatus,scope.row.image)">
                             编辑
                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
@@ -82,6 +82,9 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" v-model="editVisible" width="25%">
             <el-form label-width="27%">
+                <el-form-item label="图片：">
+                    <el-image :src="editInfo.image"></el-image>
+                </el-form-item>
                 <el-form-item label="编号：">
                     <span>{{editInfo.serviceNum}}</span>
                 </el-form-item>
@@ -118,7 +121,7 @@
                 </el-form-item>
                     <el-upload
                             class="avatar-uploader"
-                            action="https://www.hiyang.top:8766/common/upload"
+                            action="http://www.hiyang.top:8766/common/upload"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
@@ -205,6 +208,7 @@
                     unitPrice: "",
                     stock: "",
                     serviceStatus: '',
+                    image: ''
                 }),
             }
         },
@@ -377,7 +381,7 @@
             },
 
             //编辑信息
-            handleEdit(id, serviceNum, serviceName, serviceDescribe, unitPrice, stock, serviceStatus) {
+            handleEdit(id, serviceNum, serviceName, serviceDescribe, unitPrice, stock, serviceStatus,image) {
                 this.editInfo.id = id;
                 this.editInfo.serviceNum = serviceNum;
                 this.editInfo.serviceName = serviceName;
@@ -386,6 +390,7 @@
                 this.editInfo.stock = stock;
                 this.editInfo.serviceStatus = serviceStatus;
                 this.TStatus = serviceStatus;
+                this.editInfo.image = image;
                 this.editVisible = true;
             },
 
@@ -461,6 +466,7 @@
                     serviceDescribe: this.serviceAddInfo.serviceDescribe,
                     unitPrice: this.serviceAddInfo.unitPrice,
                     stock: this.serviceAddInfo.stock,
+                    publishUser: localStorage.getItem("ms_username"),
                 },{
                     headers: {
                         authorization: localStorage.getItem("token")
@@ -486,6 +492,11 @@
                         ElMessage.success(res.data.message);
                     }
                 });
+                this.serviceAddInfo.stock = '';
+                this.serviceAddInfo.image = '';
+                this.serviceAddInfo.serviceDescribe = '';
+                this.serviceAddInfo.serviceName = '';
+                this.serviceAddInfo.unitPrice = '';
             },
             //删除服务
             delService(id) {
