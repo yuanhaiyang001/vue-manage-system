@@ -166,7 +166,7 @@
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/thirdparty/order/list', {
+                axios.post('http://localhost:8762/thirdparty/order/list', {
                     orderNum: this.query.orderNum,
                     serviceName: this.query.serviceName,
                     orderStatus: this.query.orderStatus === '99' ? null : this.query.orderStatus,
@@ -174,7 +174,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res.data);
@@ -235,11 +235,11 @@
 
             //详情
             orderDetails(id) {
-                axios.post('https://www.hiyang.top:8762/thirdparty/order/details', {
+                axios.post('http://localhost:8762/thirdparty/order/details', {
                     id: id,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res.data)
@@ -263,12 +263,12 @@
             //发货
             endService(id) {
                 console.log(id + "发货");
-                axios.post('https://www.hiyang.top:8762/thirdparty/order/update', {
+                axios.post('http://localhost:8762/thirdparty/order/update', {
                     id: id,
                     orderStatus: '2'
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res.data);

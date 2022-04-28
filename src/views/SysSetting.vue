@@ -49,11 +49,11 @@
             //获取系统设置
             getSystemSetting(){
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/common/querySettings',{
+                axios.post('http://localhost:8762/common/querySettings',{
 
                 },{
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -172,12 +172,12 @@
 
             //更新
             updateSetting(set){
-                axios.post('https://www.hiyang.top:8762/common/updateSetting',{
+                axios.post('http://localhost:8762/common/updateSetting',{
                     setting: set.setting,
                     value: set.value
                 },{
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {

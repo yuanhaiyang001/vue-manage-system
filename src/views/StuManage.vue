@@ -166,7 +166,7 @@
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/admin/userManage/queryStuInfo', {
+                axios.post('http://localhost:8762/admin/userManage/queryStuInfo', {
                     onlineStatus: this.query.onlineStatus === '2' ? null : this.query.onlineStatus,
                     stuName: this.query.stuName,
                     stuNo: this.query.stuNo,
@@ -178,7 +178,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -245,13 +245,13 @@
             //学生下线
             offline(stuNo) {
                 console.log("学生下线：" + stuNo);
-                axios.post('https://www.hiyang.top:8762/admin/userManage/updateStuInfo', {
+                axios.post('http://localhost:8762/admin/userManage/updateStuInfo', {
                     userNo: stuNo,
                     onlineStatus: "0",
                     loginFlag: "1",
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -282,11 +282,11 @@
                     type: "warning",
                 }).then(() => {
                     console.log("删除学生" + stuNo);
-                    axios.post('https://www.hiyang.top:8762/admin/userManage/delStuInfo', {
+                    axios.post('http://localhost:8762/admin/userManage/delStuInfo', {
                         stuNo: stuNo,
                     }, {
                         headers: {
-                            authorization: localStorage.getItem("token")
+                            authorization: sessionStorage.getItem("token")
                         }
                     }).then(res => {
                         if (res.data.code !== 1000) {
@@ -323,13 +323,13 @@
             //保存编辑信息
             saveEdit() {
                 console.log("编辑信息：");
-                axios.post('https://www.hiyang.top:8762/admin/userManage/updateStuInfo', {
+                axios.post('http://localhost:8762/admin/userManage/updateStuInfo', {
                     userNo: this.editInfo.stuNo,
                     college: this.editInfo.college,
                     discipline: this.editInfo.discipline,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -356,7 +356,7 @@
 
             //导出excel
             exportStuInfo() {
-                axios.post('https://www.hiyang.top:8762/admin/userManage/exportStuInfo', {
+                axios.post('http://localhost:8762/admin/userManage/exportStuInfo', {
                     onlineStatus: this.query.onlineStatus === '2' ? null : this.query.onlineStatus,
                     stuName: this.query.stuName,
                     stuNo: this.query.stuNo,
@@ -367,7 +367,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token"),
+                        authorization: sessionStorage.getItem("token"),
                     },
                     responseType: 'arraybuffer'
                 }).then(res => {

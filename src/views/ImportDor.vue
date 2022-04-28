@@ -65,11 +65,11 @@
         data() {
             return {
                 isLoading: false,
-                baseUploadUrl: 'https://www.hiyang.top:8762/admin/dorManage',
+                baseUploadUrl: 'http://localhost:8762/admin/dorManage',
                 //0预览，1上传
                 action: null,
                 uploadHeaders: {
-                    authorization: localStorage.getItem("token")
+                    authorization: sessionStorage.getItem("token")
                 },
                 demoList: [{
                     dorNo: "102",

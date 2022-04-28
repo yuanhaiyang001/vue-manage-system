@@ -241,8 +241,8 @@
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/thirdparty/service/list', {
-                    publishUser: localStorage.getItem("ms_username"),
+                axios.post('http://localhost:8762/thirdparty/service/list', {
+                    publishUser: sessionStorage.getItem("ms_username"),
                     serviceStatus: this.query.serviceStatus === '99' ? null : this.query.serviceStatus,
                     serviceName: this.query.serviceName,
                     serviceNum: this.query.serviceNum,
@@ -250,7 +250,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res.data);
@@ -311,12 +311,12 @@
             //启用/禁用
             setUseStatus(dorNo, isUse) {
                 console.log("寝室启用/禁用：" + dorNo);
-                axios.post('https://www.hiyang.top:8762/admin/dorManage/updateDorInfo', {
+                axios.post('http://localhost:8762/admin/dorManage/updateDorInfo', {
                     dorNo: dorNo,
                     isUse: isUse === '0' ? '1' : '0'
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -347,11 +347,11 @@
                     type: "warning",
                 }).then(() => {
                     console.log("删除寝室" + dorNo);
-                    axios.post('https://www.hiyang.top:8762/admin/dorManage/delDorInfo', {
+                    axios.post('http://localhost:8762/admin/dorManage/delDorInfo', {
                         dorNo: dorNo,
                     }, {
                         headers: {
-                            authorization: localStorage.getItem("token")
+                            authorization: sessionStorage.getItem("token")
                         }
                     }).then(res => {
                         if (res.data.code !== 1000) {
@@ -415,7 +415,7 @@
                 if (this.editInfo.unitPrice === null){
                     this.editInfo.unitPrice = '0'
                 }
-                axios.post('https://www.hiyang.top:8762/thirdparty/service/update', {
+                axios.post('http://localhost:8762/thirdparty/service/update', {
                     id: this.editInfo.id,
                     serviceName: this.editInfo.serviceName,
                     serviceDescribe: this.editInfo.serviceDescribe,
@@ -424,7 +424,7 @@
                     serviceStatus: this.editInfo.serviceStatus,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -460,16 +460,16 @@
                 }else{
                     return;
                 }
-                axios.post('https://www.hiyang.top:8762/thirdparty/service/insert',{
+                axios.post('http://localhost:8762/thirdparty/service/insert',{
                     image: this.serviceAddInfo.image,
                     serviceName: this.serviceAddInfo.serviceName,
                     serviceDescribe: this.serviceAddInfo.serviceDescribe,
                     unitPrice: this.serviceAddInfo.unitPrice,
                     stock: this.serviceAddInfo.stock,
-                    publishUser: localStorage.getItem("ms_username"),
+                    publishUser: sessionStorage.getItem("ms_username"),
                 },{
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res =>{
                     if (res.data.code !== 1000) {
@@ -504,11 +504,11 @@
                 ElMessageBox.confirm("确定要删除吗？", "提示", {
                     type: "warning",
                 }).then(() =>{
-                    axios.post('https://www.hiyang.top:8762/thirdparty/service/delete',{
+                    axios.post('http://localhost:8762/thirdparty/service/delete',{
                         id: id,
                     },{
                         headers: {
-                            authorization: localStorage.getItem("token")
+                            authorization: sessionStorage.getItem("token")
                         }
                     }).then(res =>{
                         if (res.data.code !== 1000) {

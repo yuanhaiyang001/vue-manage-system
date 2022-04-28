@@ -46,7 +46,7 @@
             <el-table :data="list" v-loading="isLoading" height="450" border class="table" ref="multipleTable"
                       header-cell-class-name="table-header">
                 <el-table-column label="序号" type="index" width="55" align="center"></el-table-column>
-                <el-table-column prop="userNo" label="学号" align="center"></el-table-column>
+                <el-table-column prop="stuNo" label="学号" align="center"></el-table-column>
                 <el-table-column prop="realName" label="姓名" align="center"></el-table-column>
                 <el-table-column prop="phone" label="电话" align="center"></el-table-column>
                 <el-table-column prop="college" label="学院" align="center"></el-table-column>
@@ -65,11 +65,11 @@
         data() {
             return {
                 isLoading: false,
-                baseUploadUrl: 'https://www.hiyang.top:8762/admin/userManage',
+                baseUploadUrl: 'http://localhost:8762/admin/userManage',
                 //0预览，1上传
                 action: null,
                 uploadHeaders: {
-                    authorization: localStorage.getItem("token")
+                    authorization: sessionStorage.getItem("token")
                 },
                 demoList: [{
                     userNo: "201810414427",

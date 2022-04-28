@@ -166,7 +166,7 @@
             //获取表格信息
             getTableData() {
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/admin/dorManage/queryDorInfo', {
+                axios.post('http://localhost:8762/admin/dorManage/queryDorInfo', {
                     isUse: this.query.isUse === '2' ? null : this.query.isUse,
                     dorType: this.query.dorType === '99' ? null : this.query.dorType,
                     stuName: this.query.stuName,
@@ -177,7 +177,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res.data);
@@ -245,12 +245,12 @@
             //启用/禁用
             setUseStatus(dorNo, isUse) {
                 console.log("寝室启用/禁用：" + dorNo);
-                axios.post('https://www.hiyang.top:8762/admin/dorManage/updateDorInfo', {
+                axios.post('http://localhost:8762/admin/dorManage/updateDorInfo', {
                     dorNo: dorNo,
                     isUse: isUse === '0' ? '1' : '0'
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -281,11 +281,11 @@
                     type: "warning",
                 }).then(() => {
                     console.log("删除寝室" + dorNo);
-                    axios.post('https://www.hiyang.top:8762/admin/dorManage/delDorInfo', {
+                    axios.post('http://localhost:8762/admin/dorManage/delDorInfo', {
                         dorNo: dorNo,
                     }, {
                         headers: {
-                            authorization: localStorage.getItem("token")
+                            authorization: sessionStorage.getItem("token")
                         }
                     }).then(res => {
                         if (res.data.code !== 1000) {
@@ -329,13 +329,13 @@
                     ElMessage.error("请填写必填参数")
                     return false;
                 }
-                axios.post('https://www.hiyang.top:8762/admin/dorManage/updateDorInfo', {
+                axios.post('http://localhost:8762/admin/dorManage/updateDorInfo', {
                     dorNo: this.editInfo.dorNo,
                     dorType: this.editInfo.dorType,
                     peopleTotal: this.editInfo.peopleTotal,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -362,7 +362,7 @@
 
             //导出excel
             exportStuInfo() {
-                axios.post('https://www.hiyang.top:8762/admin/dorManage/exportDorInfo', {
+                axios.post('http://localhost:8762/admin/dorManage/exportDorInfo', {
                     isUse: this.query.isUse === '2' ? null : this.query.isUse,
                     dorType: this.query.dorType === '99' ? null : this.query.dorType,
                     stuName: this.query.stuName,
@@ -371,7 +371,7 @@
                     college: this.query.college,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token"),
+                        authorization: sessionStorage.getItem("token"),
                     },
                     responseType: 'arraybuffer'
                 }).then(res => {

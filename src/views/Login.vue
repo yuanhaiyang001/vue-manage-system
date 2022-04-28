@@ -77,7 +77,7 @@
             login() {
                 this.$refs["loginValid"].validate((valid) => {
                     if (valid) {
-                        axios.post('https://www.hiyang.top:8762/admin/base/login', {
+                        axios.post('http://localhost:8762/admin/base/login', {
                             userNo: this.param.username,
                             password: this.param.password,
                         }).then(res => {
@@ -85,10 +85,10 @@
                                 ElMessage.error(res.data.message);
                                 return false;
                             } else {
-                                localStorage.setItem("ms_username", this.param.username);
-                                ElMessage.success("用户" + localStorage.getItem("ms_username") + "登录");
+                                sessionStorage.setItem("ms_username", this.param.username);
+                                ElMessage.success("用户" + sessionStorage.getItem("ms_username") + "登录");
                                 let authorization = res.headers.authorization;
-                                localStorage.setItem("token", authorization);
+                                sessionStorage.setItem("token", authorization);
                                 this.getMyInfo();
                                 this.getAllDicts();
                                 setTimeout(() => {
@@ -106,9 +106,9 @@
              * 获取个人信息
              */
             getMyInfo() {
-                axios.post('https://www.hiyang.top:8762/admin/base/myInfo', {}, {
+                axios.post('http://localhost:8762/admin/base/myInfo', {}, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res.data.data);
@@ -119,9 +119,9 @@
              * 字典
              */
             getAllDicts() {
-              axios.post('https://www.hiyang.top:8762/common/dicts',{},{
+              axios.post('http://localhost:8762/common/dicts',{},{
                   headers: {
-                      authorization: localStorage.getItem("token")
+                      authorization: sessionStorage.getItem("token")
                   }
               }).then(res=> {
                   // console.log(res.data.data);

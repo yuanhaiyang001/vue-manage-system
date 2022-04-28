@@ -131,10 +131,10 @@
         },
         methods:{
             logout(){
-                axios.post('https://www.hiyang.top:8762/admin/base/logout',{
+                axios.post('http://localhost:8762/admin/base/logout',{
                 },{
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then( res =>{
                         if (res.data.code != 1000){
@@ -153,13 +153,13 @@
                 if (checked === false){
                     return;
                 }
-                axios.post('https://www.hiyang.top:8762/admin/base/updatePassword', {
+                axios.post('http://localhost:8762/admin/base/updatePassword', {
                     oldPassword:this.param.oldPassword,
                     newPassword:this.param.newPassword,
                     confirmPassword:this.param.confirmPassword
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code != 1000){
@@ -181,7 +181,7 @@
         setup() {
             const form = reactive({
                 id: JSON.parse(sessionStorage.getItem("myInfo")).id,
-                stuNo: localStorage.getItem("ms_username"),
+                stuNo: sessionStorage.getItem("ms_username"),
                 realName: JSON.parse(sessionStorage.getItem("myInfo")).realName,
                 college: JSON.parse(sessionStorage.getItem("myInfo")).college,
                 discipline: JSON.parse(sessionStorage.getItem("myInfo")).discipline,
@@ -192,14 +192,14 @@
             });
             const onSubmit = () => {
                 console.log(JSON.stringify(form));
-                axios.post('https://www.hiyang.top:8762/admin/base/updateMyInfo', {
+                axios.post('http://localhost:8762/admin/base/updateMyInfo', {
                     userName: form.userName,
                     phone: form.phone,
                     email: form.email,
                     remark: form.remark,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     console.log(res);

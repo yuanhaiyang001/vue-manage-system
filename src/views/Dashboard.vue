@@ -287,10 +287,10 @@ export default {
         //用户、服务消息、公告消息数量统计
         getTopData(){
             //用户数量
-            axios.post('https://www.hiyang.top:8762/common/userCount', {
+            axios.post('http://localhost:8762/common/userCount', {
             }, {
                 headers: {
-                    authorization: localStorage.getItem("token")
+                    authorization: sessionStorage.getItem("token")
                 }
             }).then(res => {
                 if (res.data.code != 1000) {
@@ -305,10 +305,10 @@ export default {
                 }
             });
             //服务消息
-            axios.post('https://www.hiyang.top:8762/common/serviceInfoCount', {
+            axios.post('http://localhost:8762/common/serviceInfoCount', {
             }, {
                 headers: {
-                    authorization: localStorage.getItem("token")
+                    authorization: sessionStorage.getItem("token")
                 }
             }).then(res => {
                 if (res.data.code != 1000) {
@@ -323,10 +323,10 @@ export default {
                 }
             });
             //公告消息
-            axios.post('https://www.hiyang.top:8762/common/annCount', {
+            axios.post('http://localhost:8762/common/annCount', {
             }, {
                 headers: {
-                    authorization: localStorage.getItem("token")
+                    authorization: sessionStorage.getItem("token")
                 }
             }).then(res => {
                 if (res.data.code != 1000) {

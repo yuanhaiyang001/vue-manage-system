@@ -79,14 +79,14 @@
                 }else {
                     return;
                 }
-                axios.post('https://www.hiyang.top:8762/common/saveDict',{
+                axios.post('http://localhost:8762/common/saveDict',{
                     code: this.dictData.code,
                     value: this.dictData.value,
                     type: this.dictData.type,
                     describe: this.dictData.describe
                 },{
                     headers: {
-                        authorization: localStorage.getItem("token"),
+                        authorization: sessionStorage.getItem("token"),
                     }
                 }).then(res =>{
                     console.log(res.data);

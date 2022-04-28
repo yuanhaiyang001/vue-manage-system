@@ -46,7 +46,7 @@ import {ElMessage} from "element-plus";
 import axios from "axios";
 export default {
     setup() {
-        const username = localStorage.getItem("ms_username");
+        const username = sessionStorage.getItem("ms_username");
         const message = 2;
 
         const store = useStore();
@@ -63,10 +63,10 @@ export default {
         });
 
         const logout = (username) =>{
-            axios.post('https://www.hiyang.top:8762/admin/base/logout',{
+            axios.post('http://localhost:8762/admin/base/logout',{
             },{
                 headers: {
-                    authorization: localStorage.getItem("token")
+                    authorization: sessionStorage.getItem("token")
                 }
             }).then( res =>{
                     if (res.data.code != 1000){
@@ -82,9 +82,9 @@ export default {
         const router = useRouter();
         const handleCommand = (command) => {
             if (command == "loginout") {
-                logout(localStorage.getItem("ms_username"));
-                localStorage.removeItem("ms_username");
-                localStorage.removeItem("token");
+                logout(sessionStorage.getItem("ms_username"));
+                sessionStorage.removeItem("ms_username");
+                sessionStorage.removeItem("token");
                 sessionStorage.clear();
                 router.push("/login");
             } else if (command == "user") {

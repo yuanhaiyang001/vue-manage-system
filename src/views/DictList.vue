@@ -125,9 +125,9 @@
         methods: {
             //获取类型
             getDictTypes() {
-                axios.post('https://www.hiyang.top:8762/common/dictTypes', {}, {
+                axios.post('http://localhost:8762/common/dictTypes', {}, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -156,7 +156,7 @@
             },
             //保存
             saveEdit() {
-                axios.post('https://www.hiyang.top:8762/common/updateDict', {
+                axios.post('http://localhost:8762/common/updateDict', {
                     id: this.editInfo.id,
                     code: this.editInfo.code,
                     type: this.editInfo.type,
@@ -164,7 +164,7 @@
                     describe: this.editInfo.describe,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -187,7 +187,7 @@
             //获取列表数据
             getTableData() {
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/common/dictsList', {
+                axios.post('http://localhost:8762/common/dictsList', {
                     type: this.query.type,
                     code: this.query.code,
                     describe: this.query.describe,
@@ -195,7 +195,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -234,11 +234,11 @@
                 ElMessageBox.confirm("确定要删除吗？", "提示", {
                     type: "warning",
                 }).then(() => {
-                    axios.post('https://www.hiyang.top:8762/common/deleteDict', {
+                    axios.post('http://localhost:8762/common/deleteDict', {
                         id: id
                     }, {
                         headers: {
-                            authorization: localStorage.getItem("token")
+                            authorization: sessionStorage.getItem("token")
                         }
                     }).then(res => {
                         if (res.data.code !== 1000) {

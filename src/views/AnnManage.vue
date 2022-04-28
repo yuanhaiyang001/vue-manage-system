@@ -177,7 +177,7 @@
             getTableData() {
                 // console.log(this.value1[0]);
                 this.isLoading = true;
-                axios.post('https://www.hiyang.top:8762/admin/annManage/annList', {
+                axios.post('http://localhost:8762/admin/annManage/annList', {
                     annNo: this.query.annNo,
                     annTitle: this.query.annTitle,
                     summary: this.query.summary,
@@ -189,7 +189,7 @@
                     pageSize: this.query.pageSize,
                 }, {
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res => {
                     if (res.data.code !== 1000) {
@@ -255,11 +255,11 @@
                 ElMessageBox.confirm("确定要删除吗？", "提示", {
                     type: "warning",
                 }).then(() => {
-                    axios.post('https://www.hiyang.top:8762/admin/annManage/delAnn', {
+                    axios.post('http://localhost:8762/admin/annManage/delAnn', {
                         id: id,
                     }, {
                         headers: {
-                            authorization: localStorage.getItem("token")
+                            authorization: sessionStorage.getItem("token")
                         }
                     }).then(res => {
                         if (res.data.code !== 1000) {
@@ -299,14 +299,14 @@
                 }else{
                     return;
                 }
-                axios.post('https://www.hiyang.top:8762/admin/annManage/addAnn',{
+                axios.post('http://localhost:8762/admin/annManage/addAnn',{
                     annTitle: this.ann.annTitle,
                     summary: this.ann.summary,
                     annContent: this.ann.annContent,
                     expiredTime: this.addExpiredTime,
                 },{
                     headers: {
-                        authorization: localStorage.getItem("token")
+                        authorization: sessionStorage.getItem("token")
                     }
                 }).then(res =>{
                     if (res.data.code !== 1000) {
